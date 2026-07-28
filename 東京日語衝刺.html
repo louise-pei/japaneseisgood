@@ -1,0 +1,1900 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#FFE9D6">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="東京日語">
+<title>東京日語衝刺 🏮</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏮</text></svg>">
+<style>
+/* ==========================================================================
+   東京旅遊日語 30 天衝刺 — 樣式（手機優先）
+   ========================================================================== */
+:root{
+  --primary:#E8503A;
+  --primary-d:#C93F2C;
+  --accent:#2E86AB;
+  --green:#35B37E;
+  --yellow:#F5A623;
+  --red:#E5484D;
+  --gray:#C9CDD4;
+  --bg:#FFF6EC;
+  --bg2:#FFE9D6;
+  --card:#FFFFFF;
+  --text:#2B2724;
+  --muted:#8C857D;
+  --line:rgba(0,0,0,.07);
+  --shadow:0 4px 18px rgba(180,120,80,.13);
+  --radius:20px;
+}
+
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  background:linear-gradient(170deg,var(--bg2) 0%,var(--bg) 32%,var(--bg) 100%);
+  background-attachment:fixed;
+  color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;
+  font-size:16px;line-height:1.6;
+  min-height:100vh;
+}
+#app{max-width:560px;margin:0 auto;padding:12px 16px 40px}
+.jp,.jp-big,.jp-quiz,.kana,.sign,.bubble-jp,.br-jp,.bubble-kana{
+  font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP","Yu Gothic",sans-serif;
+}
+
+h2{font-size:22px;margin:6px 0 8px;line-height:1.35}
+h3{font-size:17px;margin:0 0 10px}
+p{margin:6px 0}
+.muted{color:var(--muted)}
+.small{font-size:13px}
+.xsmall{font-size:11.5px}
+.center{text-align:center}
+.pad{height:40px}
+.warn{color:var(--primary)}
+
+/* ---------- 頂列 ---------- */
+.topbar{display:flex;align-items:center;gap:10px;padding:6px 0 12px}
+.brand{flex:1;font-weight:700;font-size:17px}
+.counter{color:var(--muted);font-size:13px;font-variant-numeric:tabular-nums}
+.icon-btn{
+  border:none;background:rgba(255,255,255,.8);width:38px;height:38px;border-radius:12px;
+  font-size:17px;cursor:pointer;box-shadow:var(--shadow);flex:none;
+}
+
+/* ---------- 卡片 ---------- */
+.card{
+  background:var(--card);border-radius:var(--radius);padding:20px;margin-bottom:14px;
+  box-shadow:var(--shadow);
+}
+.card.hero{text-align:center;padding:28px 22px}
+.hero-emoji{font-size:42px;line-height:1}
+.hero-emoji.big{font-size:64px}
+.card.danger{border:1px solid rgba(229,72,77,.25)}
+.big-emoji{font-size:32px}
+
+/* ---------- 倒數 ---------- */
+.countdown{
+  text-align:center;padding:14px 0 22px;
+}
+.cd-num{
+  font-size:76px;font-weight:800;line-height:.95;letter-spacing:-3px;
+  background:linear-gradient(135deg,var(--primary),#F5A623);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.cd-label{color:var(--muted);font-size:14px;letter-spacing:1px}
+
+/* ---------- 按鈕 ---------- */
+.btn{
+  display:block;width:100%;border:none;border-radius:16px;padding:14px 18px;
+  font-size:16px;font-weight:700;cursor:pointer;margin-top:10px;
+  background:#F1EDE8;color:var(--text);font-family:inherit;
+  transition:transform .08s ease,filter .15s ease;
+}
+.btn:active{transform:scale(.975)}
+.btn.big{padding:17px 18px;font-size:17px;border-radius:18px}
+.btn.primary{background:linear-gradient(135deg,var(--primary),#F2703F);color:#fff;box-shadow:0 6px 16px rgba(232,80,58,.32)}
+.btn.accent{background:linear-gradient(135deg,#6B5B95,var(--accent));color:#fff;box-shadow:0 6px 16px rgba(46,134,171,.3)}
+.btn.ghost{background:transparent;color:var(--muted);box-shadow:none;font-weight:600}
+.btn.warn{background:rgba(229,72,77,.1);color:var(--red)}
+.btn.small{width:auto;padding:9px 14px;font-size:14px;margin:0;flex:none}
+.btn.known{background:linear-gradient(135deg,var(--green),#4CC38A);color:#fff}
+.btn.rusty{background:linear-gradient(135deg,var(--yellow),#F7B955);color:#fff}
+
+/* ---------- 首頁 ---------- */
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.row2 .card{margin:0;text-align:center;padding:18px 12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+.stat-big{font-size:32px;font-weight:800;line-height:1.2}
+.ring-wrap{position:relative;display:inline-flex;align-items:center;justify-content:center}
+.ring-center{position:absolute;font-weight:800;font-size:18px}
+.ring{display:block}
+
+.phase-tag{
+  display:inline-block;background:rgba(46,134,171,.12);color:var(--accent);
+  padding:4px 12px;border-radius:99px;font-size:13px;font-weight:700;margin-bottom:6px;
+}
+.due-line{margin:12px 0 2px;font-size:15px}
+
+.scen-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px 6px;margin-top:4px}
+.scen{text-align:center}
+.scen-ring{position:relative;display:inline-flex;align-items:center;justify-content:center}
+.scen-emoji{position:absolute;font-size:22px}
+.scen-name{font-size:12.5px;font-weight:600;margin-top:2px}
+.scen-num{font-size:11.5px;color:var(--muted)}
+.legend{display:flex;gap:14px;justify-content:center;margin-top:16px;font-size:12px;color:var(--muted)}
+.legend span{display:flex;align-items:center;gap:5px}
+.dot{width:9px;height:9px;border-radius:99px;display:inline-block;flex:none}
+.dot.green{background:var(--green)}.dot.yellow{background:var(--yellow)}.dot.gray{background:var(--gray)}
+
+.tokyo-card{background:linear-gradient(135deg,#F7F2FF,#EAF4F9)}
+.tokyo-head{display:flex;gap:12px;align-items:center;margin-bottom:6px}
+.tokyo-head h3{margin:0}
+.locked{opacity:.62}
+.lock-note{text-align:center;color:var(--muted);font-size:14px;padding:8px 0 2px}
+
+.banner{
+  background:#fff;border-left:4px solid var(--accent);border-radius:14px;padding:14px 16px;
+  margin-bottom:14px;box-shadow:var(--shadow);font-size:14px;
+  display:flex;gap:12px;align-items:center;flex-wrap:wrap;
+}
+.banner .btn{background:var(--accent);color:#fff}
+
+.footnav{display:flex;gap:10px;margin-top:6px}
+.footnav .btn{margin-top:0;font-size:14px;background:rgba(255,255,255,.7)}
+
+/* ---------- 進度條 ---------- */
+.progress{height:10px;background:rgba(0,0,0,.07);border-radius:99px;overflow:hidden;margin:14px 0 8px}
+.progress.slim{height:5px;margin:0 0 14px}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--primary),#F5A623);border-radius:99px;transition:width .4s}
+
+/* ---------- 課程分段列 ---------- */
+.segbar{display:flex;gap:6px;margin-bottom:16px}
+.seg{
+  flex:1;height:34px;border-radius:12px;background:rgba(255,255,255,.65);
+  display:flex;align-items:center;justify-content:center;font-size:15px;opacity:.45;
+}
+.seg.done{opacity:1;background:rgba(53,179,126,.18)}
+.seg.cur{opacity:1;background:#fff;box-shadow:var(--shadow);transform:scale(1.04)}
+.counter-line{text-align:center;color:var(--muted);font-size:13px;margin-bottom:10px;font-variant-numeric:tabular-nums}
+
+/* ---------- 診斷 ---------- */
+.diag-card{text-align:center;padding:34px 22px}
+.diag-q{font-size:26px;font-weight:700;margin:14px 0 10px;line-height:1.45}
+.diag-btns{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.diag-btns .btn{margin-top:0;padding:20px 10px;font-size:16px}
+.badge{
+  display:inline-block;padding:4px 12px;border-radius:99px;font-size:12.5px;font-weight:700;
+}
+
+/* ---------- 翻卡 ---------- */
+.flip{perspective:1200px;min-height:300px;margin-bottom:14px;cursor:pointer}
+.flip-inner{position:relative;width:100%;min-height:300px;transition:transform .55s cubic-bezier(.4,.2,.2,1);transform-style:preserve-3d}
+.flip.flipped .flip-inner{transform:rotateY(180deg)}
+.face{
+  position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;
+  background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);
+  padding:26px 22px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;gap:8px;overflow:auto;
+}
+.face.back{transform:rotateY(180deg);background:linear-gradient(160deg,#FFFDF8,#FFF3E6)}
+.zh-big{font-size:27px;font-weight:700;line-height:1.45}
+.say-hint{margin-top:10px;font-size:15px;color:var(--muted);line-height:1.5}
+.jp-big{font-size:29px;font-weight:700;line-height:1.5;word-break:break-word}
+.kana{font-size:17px;color:#6E675F}
+.romaji{font-size:15px;color:var(--muted);font-style:italic}
+.zh-small{font-size:15px;color:var(--muted);margin-top:8px;border-top:1px dashed var(--line);padding-top:10px;width:100%}
+.tap-hint{font-size:14px;padding:6px 0 12px}
+.tag{display:inline-block;margin-left:6px;padding:1px 8px;border-radius:99px;font-size:11px;font-weight:700}
+.tag.new{background:var(--primary);color:#fff}
+.tag.spot{background:var(--accent);color:#fff}
+
+/* ---------- 自評按鈕 ---------- */
+.grades{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:4px 0 20px}
+.grade{
+  border:none;border-radius:14px;padding:12px 2px;min-height:70px;cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  font-family:inherit;color:#fff;transition:transform .08s;
+}
+.grade:active{transform:scale(.94)}
+.grade b{font-size:12.5px;font-weight:700;letter-spacing:-.3px;line-height:1.25}
+.grade span{font-size:11px;opacity:.75}
+.g0{background:#E5484D}
+.g2{background:#F2743A}
+.g3{background:#F5A623}
+.g4{background:#7CC061}
+.g5{background:#35B37E}
+
+/* ---------- 選擇題 ---------- */
+.quiz-card{text-align:center;padding:30px 20px}
+.jp-quiz{font-size:28px;font-weight:700;line-height:1.5;margin:6px 0 4px}
+.opts{display:grid;gap:10px;margin-bottom:14px}
+.opt{
+  border:2px solid var(--line);background:#fff;border-radius:16px;padding:15px 16px;
+  font-size:15.5px;text-align:left;cursor:pointer;font-family:inherit;color:var(--text);
+  transition:transform .08s,border-color .15s;
+}
+.opt:active{transform:scale(.98)}
+.opt.right{border-color:var(--green);background:rgba(53,179,126,.12);font-weight:700}
+.opt.wrong{border-color:var(--red);background:rgba(229,72,77,.1)}
+
+/* ---------- 漢字快閃 ---------- */
+.sign-card{text-align:center;padding:34px 20px;background:linear-gradient(160deg,#FFFFFF,#F4F7FA)}
+.sign{
+  font-size:64px;font-weight:700;letter-spacing:4px;line-height:1.25;
+  word-break:break-word;
+}
+@media(max-width:380px){.sign{font-size:52px}}
+
+/* ---------- 對話 ---------- */
+.intro{background:rgba(255,255,255,.7);border-radius:16px;padding:14px 16px;margin-bottom:12px;font-size:14.5px;line-height:1.6}
+.narration{
+  background:rgba(0,0,0,.04);border-radius:14px;padding:13px 16px;margin-bottom:12px;
+  font-size:14.5px;color:#5F594F;line-height:1.65;
+}
+.npc{display:flex;gap:10px;align-items:flex-start;margin-bottom:14px}
+.npc-avatar{font-size:26px;flex:none;background:#fff;width:44px;height:44px;border-radius:99px;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow)}
+.bubble{
+  background:#fff;border-radius:4px 18px 18px 18px;padding:14px 16px;box-shadow:var(--shadow);flex:1;
+}
+.bubble-jp{font-size:19px;font-weight:600;line-height:1.55}
+.bubble-kana{font-size:13.5px;color:#807A72;margin-top:2px}
+.bubble-zh{font-size:14px;color:var(--muted);margin-top:6px;border-top:1px dashed var(--line);padding-top:6px}
+.prompt-card{background:linear-gradient(160deg,#FFF9F0,#FFEFE0);border:1px dashed rgba(232,80,58,.3)}
+.prompt{font-size:21px;font-weight:700;line-height:1.5;margin:4px 0 6px}
+.answer-card{background:linear-gradient(160deg,#F5FBF8,#EDF7F2);text-align:center}
+.tip{margin-top:12px;font-size:13.5px;color:#5F594F;background:rgba(245,166,35,.14);padding:10px 12px;border-radius:12px;text-align:left}
+.station{display:flex;gap:12px;align-items:flex-start;background:#fff;border-radius:18px;padding:16px;box-shadow:var(--shadow);margin-bottom:14px}
+
+/* ---------- 錄音 ---------- */
+.rec{margin-top:12px}
+.rec-btn{background:rgba(0,0,0,.05);font-size:14px;padding:11px;margin-top:0}
+.rec-btn.recording{background:var(--red);color:#fff;animation:pulse 1.2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.62}}
+.audio{width:100%;margin-top:10px;height:38px}
+
+/* ---------- 完成慶祝 ---------- */
+.celebrate{background:linear-gradient(160deg,#FFFDF6,#FFF0DE)}
+.recap{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:18px 0}
+.recap div{display:flex;flex-direction:column;gap:2px}
+.recap b{font-size:23px}
+.recap span{font-size:12px;color:var(--muted)}
+.streak-line{font-size:15px;margin:6px 0}
+.quote{margin-top:14px;font-size:14.5px;color:#5F594F;font-style:italic;background:rgba(0,0,0,.035);padding:12px;border-radius:12px}
+.confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:50}
+.confetti span{
+  position:absolute;top:-40px;font-size:26px;
+  left:calc(8% + var(--i) * 15%);
+  animation:fall 2.6s cubic-bezier(.3,.6,.5,1) forwards;
+  animation-delay:calc(var(--i) * .16s);
+}
+@keyframes fall{
+  0%{transform:translateY(0) rotate(0);opacity:0}
+  12%{opacity:1}
+  100%{transform:translateY(105vh) rotate(420deg);opacity:0}
+}
+
+/* ---------- 卡片庫 ---------- */
+.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:12px;-webkit-overflow-scrolling:touch}
+.chips::-webkit-scrollbar{display:none}
+.chip{
+  flex:none;border:none;background:rgba(255,255,255,.75);border-radius:99px;padding:9px 15px;
+  font-size:13.5px;font-family:inherit;cursor:pointer;color:var(--muted);font-weight:600;
+}
+.chip.on{background:var(--primary);color:#fff}
+.card.list{padding:6px 16px}
+.browse-row{display:flex;gap:11px;align-items:center;padding:13px 0;border-bottom:1px solid var(--line)}
+.browse-row:last-child{border-bottom:none}
+.br-main{flex:1;min-width:0}
+.br-jp{font-size:17px;font-weight:600;line-height:1.4}
+.br-kana{font-size:12px;color:#8C857D}
+.br-zh{font-size:13.5px;color:#5F594F;margin-top:2px}
+.br-meta{font-size:11.5px;color:var(--muted);flex:none;text-align:right}
+
+/* ---------- 設定 ---------- */
+.kv{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid var(--line);font-size:14.5px}
+.kv:last-child{border-bottom:none}
+.switch{display:flex;align-items:center;gap:10px;font-size:15px;padding:6px 0;cursor:pointer}
+.switch input{width:20px;height:20px;accent-color:var(--primary)}
+.select{border:1px solid var(--line);border-radius:10px;padding:7px 10px;font-family:inherit;font-size:14px;background:#fff}
+.input{
+  width:100%;border:2px solid var(--line);border-radius:14px;padding:14px;font-size:16px;
+  font-family:inherit;margin:12px 0 4px;background:#fff;color:var(--text);
+}
+.input:focus{outline:none;border-color:var(--primary)}
+
+/* ---------- toast ---------- */
+#toast{
+  position:fixed;left:50%;bottom:26px;transform:translate(-50%,20px);
+  background:rgba(30,26,22,.93);color:#fff;padding:12px 20px;border-radius:99px;
+  font-size:14px;opacity:0;transition:.28s;pointer-events:none;z-index:100;
+  max-width:88vw;text-align:center;
+}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* ---------- 桌面 ---------- */
+@media(min-width:640px){
+  #app{padding-top:24px}
+  .cd-num{font-size:88px}
+}
+
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="toast"></div>
+<script>
+/* ==========================================================================
+   東京旅遊日語 30 天衝刺 — 內容資料庫
+   欄位格式：[jp, kana, romaji, zh, star]
+   star = 1 代表高頻卡（Day 28–30 精煉用）
+   ========================================================================== */
+
+const TRIP_DATE = new Date(2026, 7, 27, 0, 0, 0, 0).getTime(); // 2026-08-27
+
+const SCENARIOS = {
+  basics:     { name: '基礎萬用', emoji: '🌸', color: '#FF5A5F' },
+  repair:     { name: '修復策略', emoji: '🛟', color: '#F5A623' },
+  restaurant: { name: '餐廳',     emoji: '🍜', color: '#E8503A' },
+  shopping:   { name: '購物',     emoji: '🛍️', color: '#C86FC9' },
+  transport:  { name: '交通',     emoji: '🚃', color: '#2E86AB' },
+  hotel:      { name: '飯店',     emoji: '🏨', color: '#3AA76D' },
+  kanji:      { name: '招牌漢字', emoji: '🈶', color: '#6B5B95' }
+};
+
+/* 首頁六大情境環（basics 與 repair 合併顯示為「基礎萬用」） */
+const SCENARIO_GROUPS = [
+  { key: 'basics',     label: '基礎萬用', emoji: '🌸', members: ['basics', 'repair'] },
+  { key: 'restaurant', label: '餐廳',     emoji: '🍜', members: ['restaurant'] },
+  { key: 'shopping',   label: '購物',     emoji: '🛍️', members: ['shopping'] },
+  { key: 'transport',  label: '交通',     emoji: '🚃', members: ['transport'] },
+  { key: 'hotel',      label: '飯店',     emoji: '🏨', members: ['hotel'] },
+  { key: 'kanji',      label: '招牌漢字', emoji: '🈶', members: ['kanji'] }
+];
+
+const RAW_CARDS = {
+  /* ---------------- basics 基礎萬用 ---------------- */
+  basics: {
+    phrase: [
+      ['すみません', 'すみません', 'sumimasen', '不好意思／借過／呼喚店員（萬用）', 1],
+      ['ありがとうございます', 'ありがとうございます', 'arigatō gozaimasu', '謝謝', 1],
+      ['お願いします', 'おねがいします', 'onegai shimasu', '麻煩你了', 1],
+      ['〜をください', '〜をください', '〜 o kudasai', '請給我〜', 1],
+      ['〜てもいいですか', '〜てもいいですか', '〜te mo ii desu ka', '我可以〜嗎？', 1],
+      ['〜はどこですか', '〜はどこですか', '〜 wa doko desu ka', '〜在哪裡？', 1],
+      ['〜はありますか', '〜はありますか', '〜 wa arimasu ka', '有〜嗎？', 1],
+      ['いくらですか', 'いくらですか', 'ikura desu ka', '多少錢？', 1],
+      ['大丈夫です', 'だいじょうぶです', 'daijōbu desu', '沒關係／不用了', 0],
+      ['結構です', 'けっこうです', 'kekkō desu', '不用了（婉拒）', 0],
+      ['おはようございます', 'おはようございます', 'ohayō gozaimasu', '早安', 0],
+      ['こんにちは', 'こんにちは', 'konnichiwa', '你好（白天）', 0],
+      ['こんばんは', 'こんばんは', 'konbanwa', '晚上好', 0]
+    ],
+    vocab: [
+      ['一', 'いち', 'ichi', '1', 1],
+      ['二', 'に', 'ni', '2', 1],
+      ['三', 'さん', 'san', '3', 1],
+      ['四', 'よん', 'yon', '4', 1],
+      ['五', 'ご', 'go', '5', 1],
+      ['六', 'ろく', 'roku', '6', 0],
+      ['七', 'なな', 'nana', '7', 0],
+      ['八', 'はち', 'hachi', '8', 0],
+      ['九', 'きゅう', 'kyū', '9', 0],
+      ['十', 'じゅう', 'jū', '10', 0],
+      ['一つ', 'ひとつ', 'hitotsu', '一個', 1],
+      ['二つ', 'ふたつ', 'futatsu', '兩個', 1],
+      ['三つ', 'みっつ', 'mittsu', '三個', 0],
+      ['一人', 'ひとり', 'hitori', '一個人', 1],
+      ['二人', 'ふたり', 'futari', '兩個人', 1],
+      ['三人', 'さんにん', 'san-nin', '三個人', 0],
+      ['〜枚', '〜まい', '〜mai', '〜張（票、薄片狀的東西）', 0],
+      ['〜本', '〜ほん', '〜hon', '〜瓶（細長的東西）', 0],
+      ['〜杯', '〜はい', '〜hai', '〜杯', 0],
+      ['〜時', '〜じ', '〜ji', '〜點（鐘）', 1],
+      ['〜分', '〜ふん', '〜fun', '〜分', 0],
+      ['今日', 'きょう', 'kyō', '今天', 0],
+      ['明日', 'あした', 'ashita', '明天', 0]
+    ]
+  },
+
+  /* ---------------- repair 修復策略（全部高頻） ---------------- */
+  repair: {
+    phrase: [
+      ['もう一度お願いします', 'もういちどおねがいします', 'mō ichido onegai shimasu', '請再說一次', 1],
+      ['ゆっくり話してください', 'ゆっくりはなしてください', 'yukkuri hanashite kudasai', '請說慢一點', 1],
+      ['すみません、わかりません', 'すみません、わかりません', 'sumimasen, wakarimasen', '不好意思，我聽不懂', 1],
+      ['日本語が少しだけわかります', 'にほんごがすこしだけわかります', 'nihongo ga sukoshi dake wakarimasu', '我只懂一點日語', 1],
+      ['ここがわかりません', 'ここがわかりません', 'koko ga wakarimasen', '我不懂這個部分（指著）', 1],
+      ['英語のメニューはありますか', 'えいごのメニューはありますか', 'eigo no menyū wa arimasu ka', '有英文菜單嗎？', 1],
+      ['書いてもらえますか', 'かいてもらえますか', 'kaite moraemasu ka', '可以幫我寫下來嗎？', 1]
+    ]
+  },
+
+  /* ---------------- restaurant 餐廳 ---------------- */
+  restaurant: {
+    phrase: [
+      ['四名です', 'よんめいです', 'yon-mei desu', '我們四個人', 1],
+      ['予約はしていません', 'よやくはしていません', 'yoyaku wa shite imasen', '沒有訂位', 0],
+      ['おすすめは何ですか', 'おすすめはなんですか', 'osusume wa nan desu ka', '你推薦什麼？', 1],
+      ['これをください', 'これをください', 'kore o kudasai', '我要這個（指菜單）', 1],
+      ['とりあえず、生ビールをください', 'とりあえず、なまビールをください', 'toriaezu, nama bīru o kudasai', '先來杯生啤酒', 0],
+      ['〜はアレルギーがあります', '〜はアレルギーがあります', '〜 wa arerugī ga arimasu', '我對〜過敏', 0],
+      ['〜は食べられません', '〜はたべられません', '〜 wa taberaremasen', '我不能吃〜', 0],
+      ['これは何のお肉ですか', 'これはなんのおにくですか', 'kore wa nan no oniku desu ka', '這是什麼肉？', 0],
+      ['お会計お願いします', 'おかいけいおねがいします', 'okaikei onegai shimasu', '麻煩結帳', 1],
+      ['カードは使えますか', 'カードはつかえますか', 'kādo wa tsukaemasu ka', '可以刷卡嗎？', 1],
+      ['ごちそうさまでした', 'ごちそうさまでした', 'gochisōsama deshita', '謝謝招待（離開時）', 0],
+      ['持ち帰りできますか', 'もちかえりできますか', 'mochikaeri dekimasu ka', '可以外帶嗎？', 0],
+      ['お水をください', 'おみずをください', 'omizu o kudasai', '請給我水', 0]
+    ],
+    vocab: [
+      ['卵', 'たまご', 'tamago', '蛋', 0],
+      ['牛乳', 'ぎゅうにゅう', 'gyūnyū', '牛奶', 0],
+      ['小麦', 'こむぎ', 'komugi', '小麥', 0],
+      ['そば', 'そば', 'soba', '蕎麥（麵）', 0],
+      ['食券', 'しょっけん', 'shokken', '餐券', 0],
+      ['券売機', 'けんばいき', 'kenbaiki', '食券機（售票機）', 0]
+    ]
+  },
+
+  /* ---------------- shopping 購物 ---------------- */
+  shopping: {
+    phrase: [
+      ['〜を探しています', '〜をさがしています', '〜 o sagashite imasu', '我在找〜', 0],
+      ['試着してもいいですか', 'しちゃくしてもいいですか', 'shichaku shite mo ii desu ka', '可以試穿嗎？', 1],
+      ['Mサイズはありますか', 'エムサイズはありますか', 'emu saizu wa arimasu ka', '有 M 號嗎？', 0],
+      ['もう少し大きいサイズはありますか', 'もうすこしおおきいサイズはありますか', 'mō sukoshi ōkii saizu wa arimasu ka', '有大一點的嗎？', 0],
+      ['別の色はありますか', 'べつのいろはありますか', 'betsu no iro wa arimasu ka', '有別的顏色嗎？', 0],
+      ['税込みですか', 'ぜいこみですか', 'zeikomi desu ka', '是含稅價嗎？', 0],
+      ['免税でお願いします', 'めんぜいでおねがいします', 'menzei de onegai shimasu', '我要辦免稅', 1],
+      ['パスポートはこちらです', 'パスポートはこちらです', 'pasupōto wa kochira desu', '這是我的護照', 0],
+      ['袋をください', 'ふくろをください', 'fukuro o kudasai', '請給我袋子', 0],
+      ['これだけです', 'これだけです', 'kore dake desu', '只買這些', 0]
+    ]
+  },
+
+  /* ---------------- transport 交通 ---------------- */
+  transport: {
+    phrase: [
+      ['〜駅はどこですか', '〜えきはどこですか', '〜 eki wa doko desu ka', '〜車站在哪？', 1],
+      ['この電車は〜に行きますか', 'このでんしゃは〜にいきますか', 'kono densha wa 〜 ni ikimasu ka', '這班車有到〜嗎？', 1],
+      ['〜に行きたいです', '〜にいきたいです', '〜 ni ikitai desu', '我想去〜', 1],
+      ['何番線ですか', 'なんばんせんですか', 'nan-ban-sen desu ka', '幾號月台？', 0],
+      ['乗り換えはどこですか', 'のりかえはどこですか', 'norikae wa doko desu ka', '在哪轉乘？', 0],
+      ['ICカードにチャージしたいです', 'アイシーカードにチャージしたいです', 'IC kādo ni chāji shitai desu', '我想儲值 IC 卡', 0],
+      ['切符はどこで買えますか', 'きっぷはどこでかえますか', 'kippu wa doko de kaemasu ka', '在哪買票？', 0],
+      ['〜までお願いします', '〜までおねがいします', '〜 made onegai shimasu', '（計程車）請到〜', 0],
+      ['ここで降ります', 'ここでおります', 'koko de orimasu', '我在這裡下車', 0]
+    ]
+  },
+
+  /* ---------------- hotel 飯店 ---------------- */
+  hotel: {
+    phrase: [
+      ['〜の名前で予約しています', '〜のなまえでよやくしています', '〜 no namae de yoyaku shite imasu', '用〜的名字訂房', 1],
+      ['チェックインお願いします', 'チェックインおねがいします', 'chekku in onegai shimasu', '我要辦入住', 1],
+      ['荷物を預かっていただけますか', 'にもつをあずかっていただけますか', 'nimotsu o azukatte itadakemasu ka', '可以寄放行李嗎？', 1],
+      ['朝食は何時からですか', 'ちょうしょくはなんじからですか', 'chōshoku wa nan-ji kara desu ka', '早餐幾點開始？', 0],
+      ['Wi-Fiのパスワードを教えてください', 'ワイファイのパスワードをおしえてください', 'Wi-Fi no pasuwādo o oshiete kudasai', '請告訴我 Wi-Fi 密碼', 0],
+      ['タオルをもう一枚いただけますか', 'タオルをもういちまいいただけますか', 'taoru o mō ichi-mai itadakemasu ka', '再給我一條毛巾好嗎？', 0],
+      ['チェックアウトは何時ですか', 'チェックアウトはなんじですか', 'chekku auto wa nan-ji desu ka', '退房幾點？', 0]
+    ]
+  },
+
+  /* ---------------- kanji 招牌閱讀 ---------------- */
+  kanji: {
+    kanji: [
+      ['改札', 'かいさつ', 'kaisatsu', '剪票口', 1],
+      ['出口', 'でぐち', 'deguchi', '出口', 0],
+      ['入口', 'いりぐち', 'iriguchi', '入口', 0],
+      ['精算', 'せいさん', 'seisan', '補票（補繳車資）', 1],
+      ['精算機', 'せいさんき', 'seisanki', '補票機', 0],
+      ['乗り換え', 'のりかえ', 'norikae', '轉乘', 1],
+      ['券売機', 'けんばいき', 'kenbaiki', '售票機', 0],
+      ['〜番線', '〜ばんせん', '〜bansen', '〜號月台', 0],
+      ['割引', 'わりびき', 'waribiki', '折扣', 0],
+      ['税込', 'ぜいこみ', 'zeikomi', '含稅', 1],
+      ['税抜', 'ぜいぬき', 'zeinuki', '未稅', 0],
+      ['両替', 'りょうがえ', 'ryōgae', '換錢', 0],
+      ['免税', 'めんぜい', 'menzei', '免稅', 1],
+      ['営業中', 'えいぎょうちゅう', 'eigyōchū', '營業中', 0],
+      ['準備中', 'じゅんびちゅう', 'junbichū', '準備中（尚未開店）', 0],
+      ['使用中', 'しようちゅう', 'shiyōchū', '使用中', 0],
+      ['禁煙', 'きんえん', "kin'en", '禁菸', 0],
+      ['立入禁止', 'たちいりきんし', 'tachiiri kinshi', '禁止進入', 0],
+      ['お手洗い', 'おてあらい', 'otearai', '洗手間', 1],
+      ['会計', 'かいけい', 'kaikei', '結帳處', 0],
+      ['売切れ', 'うりきれ', 'urikire', '售完', 1],
+      ['半額', 'はんがく', 'hangaku', '半價', 0],
+      ['北口', 'きたぐち', 'kitaguchi', '北出口', 0],
+      ['南口', 'みなみぐち', 'minamiguchi', '南出口', 0],
+      ['東口', 'ひがしぐち', 'higashiguchi', '東出口', 0],
+      ['西口', 'にしぐち', 'nishiguchi', '西出口', 0],
+      ['無料', 'むりょう', 'muryō', '免費', 0],
+      ['有料', 'ゆうりょう', 'yūryō', '付費（收費）', 0]
+    ]
+  }
+};
+
+/* 攤平成卡片陣列（id 穩定，供 localStorage 對應） */
+const CARDS = (function () {
+  const out = [];
+  Object.keys(RAW_CARDS).forEach(scenario => {
+    Object.keys(RAW_CARDS[scenario]).forEach(type => {
+      RAW_CARDS[scenario][type].forEach((row, i) => {
+        out.push({
+          id: scenario + '-' + type + '-' + i,
+          jp: row[0], kana: row[1], romaji: row[2], zh: row[3],
+          star: !!row[4], scenario: scenario, type: type
+        });
+      });
+    });
+  });
+  return out;
+})();
+
+const CARD_BY_ID = CARDS.reduce((m, c) => (m[c.id] = c, m), {});
+const CARD_BY_JP = CARDS.reduce((m, c) => (m[c.jp] = c, m), {});
+
+/* ==========================================================================
+   情境對話腳本
+   step: { narration?, npc?{jp,kana,zh}, prompt, answer{jp,kana,romaji}, tip? }
+   ========================================================================== */
+
+const DIALOGUES = [
+  {
+    id: 'rest_normal',
+    scenario: 'restaurant',
+    title: '餐廳・一般點餐',
+    emoji: '🍶',
+    intro: '晚上七點，你帶著家人推開一家居酒屋的暖簾。',
+    steps: [
+      {
+        npc: { jp: 'いらっしゃいませ。何名様ですか？', kana: 'いらっしゃいませ。なんめいさまですか？', zh: '歡迎光臨，請問幾位？' },
+        prompt: '說：我們四個人',
+        answer: { jp: '四名です', kana: 'よんめいです', romaji: 'yon-mei desu' }
+      },
+      {
+        npc: { jp: 'ご予約はされていますか？', kana: 'ごよやくはされていますか？', zh: '請問有訂位嗎？' },
+        prompt: '說：沒有訂位',
+        answer: { jp: '予約はしていません', kana: 'よやくはしていません', romaji: 'yoyaku wa shite imasen' }
+      },
+      {
+        narration: '店員帶你們到窗邊的位子坐下，遞上菜單就走開了。菜單全是日文。',
+        prompt: '呼喚店員，並問他推薦什麼',
+        answer: { jp: 'すみません、おすすめは何ですか', kana: 'すみません、おすすめはなんですか', romaji: 'sumimasen, osusume wa nan desu ka' },
+        tip: '「すみません」在店裡就是「不好意思、這邊」的呼喚用法，大聲說沒關係。'
+      },
+      {
+        npc: { jp: '本日は鶏の唐揚げがおすすめです。', kana: 'ほんじつはとりのからあげがおすすめです。', zh: '今天推薦炸雞塊。' },
+        prompt: '指著菜單說：我要這個',
+        answer: { jp: 'これをください', kana: 'これをください', romaji: 'kore o kudasai' }
+      },
+      {
+        npc: { jp: 'お飲み物はいかがですか？', kana: 'おのみものはいかがですか？', zh: '飲料要來點什麼嗎？' },
+        prompt: '說：先來杯生啤酒',
+        answer: { jp: 'とりあえず、生ビールをください', kana: 'とりあえず、なまビールをください', romaji: 'toriaezu, nama bīru o kudasai' }
+      },
+      {
+        narration: '菜上桌了。有一道看起來像肉，但你不確定是什麼。',
+        prompt: '問店員：這是什麼肉？',
+        answer: { jp: 'これは何のお肉ですか', kana: 'これはなんのおにくですか', romaji: 'kore wa nan no oniku desu ka' }
+      },
+      {
+        narration: '大家吃飽了，該結帳了。',
+        prompt: '說：麻煩結帳，可以刷卡嗎？',
+        answer: { jp: 'お会計お願いします。カードは使えますか', kana: 'おかいけいおねがいします。カードはつかえますか', romaji: 'okaikei onegai shimasu. kādo wa tsukaemasu ka' }
+      },
+      {
+        narration: '結完帳，準備離開。',
+        prompt: '離開時對店員說一句',
+        answer: { jp: 'ごちそうさまでした', kana: 'ごちそうさまでした', romaji: 'gochisōsama deshita' },
+        tip: '這句是「謝謝招待」，日本人離開餐廳幾乎一定會說。說了印象分直接加滿。'
+      }
+    ]
+  },
+
+  {
+    id: 'rest_ticket',
+    scenario: 'restaurant',
+    title: '餐廳・食券機拉麵店',
+    emoji: '🎫',
+    intro: '中午，你走進一家拉麵店。門口一台亮著燈的機器擋在前面 —— 食券機。',
+    steps: [
+      {
+        narration: '食券機流程：① 先投錢（紙鈔或硬幣）② 按下想吃的餐點按鈕 ③ 機器吐出餐券 ④ 把餐券交給店員。座位坐下後把券放在檯面上即可。',
+        prompt: '按鈕全是漢字看不懂。呼喚店員，請他推薦',
+        answer: { jp: 'すみません、おすすめを教えてください', kana: 'すみません、おすすめをおしえてください', romaji: 'sumimasen, osusume o oshiete kudasai' }
+      },
+      {
+        npc: { jp: '一番人気はこの醤油ラーメンですよ。', kana: 'いちばんにんきはこのしょうゆラーメンですよ。', zh: '最受歡迎的是這個醬油拉麵喔。' },
+        prompt: '他講得有點快，請他再說一次',
+        answer: { jp: 'もう一度お願いします', kana: 'もういちどおねがいします', romaji: 'mō ichido onegai shimasu' }
+      },
+      {
+        narration: '你按下按鈕，機器吐出一張餐券。你坐下把券交給店員。',
+        prompt: '你對小麥過敏，告訴店員',
+        answer: { jp: '小麦はアレルギーがあります', kana: 'こむぎはアレルギーがあります', romaji: 'komugi wa arerugī ga arimasu' },
+        tip: '把「小麦」換成 卵（たまご）、牛乳（ぎゅうにゅう）、そば 都通用。'
+      },
+      {
+        narration: '拉麵上桌，湯頭很香。吃完後你想帶一份餃子回飯店。',
+        prompt: '問：可以外帶嗎？',
+        answer: { jp: '持ち帰りできますか', kana: 'もちかえりできますか', romaji: 'mochikaeri dekimasu ka' }
+      }
+    ]
+  },
+
+  {
+    id: 'transport_lost',
+    scenario: 'transport',
+    title: '交通・問路與月台',
+    emoji: '🚉',
+    intro: '你手上拿著手機，但地下街訊號很差。家人在後面等你決定往哪走。',
+    steps: [
+      {
+        narration: '前方有位看起來不趕時間的上班族。',
+        prompt: '叫住他，問新宿車站在哪裡',
+        answer: { jp: 'すみません、新宿駅はどこですか', kana: 'すみません、しんじゅくえきはどこですか', romaji: 'sumimasen, shinjuku eki wa doko desu ka' }
+      },
+      {
+        npc: { jp: 'あの階段を上がって、右です。', kana: 'あのかいだんをあがって、みぎです。', zh: '上那個樓梯，然後右轉。' },
+        prompt: '道謝',
+        answer: { jp: 'ありがとうございます', kana: 'ありがとうございます', romaji: 'arigatō gozaimasu' }
+      },
+      {
+        narration: '你走到月台，但不確定這班車對不對。旁邊站著站務員。',
+        prompt: '問站務員：這班車有到淺草嗎？',
+        answer: { jp: 'この電車は浅草に行きますか', kana: 'このでんしゃはあさくさにいきますか', romaji: 'kono densha wa asakusa ni ikimasu ka' }
+      },
+      {
+        npc: { jp: 'いいえ、次のホームです。', kana: 'いいえ、つぎのホームです。', zh: '不是，是下一個月台。' },
+        prompt: '你沒聽清楚，請他再說一次',
+        answer: { jp: 'もう一度お願いします', kana: 'もういちどおねがいします', romaji: 'mō ichido onegai shimasu' }
+      },
+      {
+        npc: { jp: '次のホームですよ。三番線です。', kana: 'つぎのホームですよ。さんばんせんです。', zh: '是下一個月台喔，三號月台。' },
+        prompt: '再確認一次：幾號月台？',
+        answer: { jp: '何番線ですか', kana: 'なんばんせんですか', romaji: 'nan-ban-sen desu ka' }
+      },
+      {
+        narration: '你的 IC 卡餘額不足，被閘門擋下來了。',
+        prompt: '跟站務員說：我想儲值 IC 卡',
+        answer: { jp: 'ICカードにチャージしたいです', kana: 'アイシーカードにチャージしたいです', romaji: 'IC kādo ni chāji shitai desu' },
+        tip: '若是紙票不足額，找「精算機」補票即可。'
+      }
+    ]
+  },
+
+  {
+    id: 'shopping_tax',
+    scenario: 'shopping',
+    title: '購物・試穿與退稅',
+    emoji: '🧾',
+    intro: '藥妝店二樓的服飾區，你看上一件外套。',
+    steps: [
+      {
+        prompt: '問店員：可以試穿嗎？',
+        answer: { jp: '試着してもいいですか', kana: 'しちゃくしてもいいですか', romaji: 'shichaku shite mo ii desu ka' }
+      },
+      {
+        npc: { jp: 'はい、どうぞ。こちらです。', kana: 'はい、どうぞ。こちらです。', zh: '好的，請。這邊請。' },
+        prompt: '有點緊。問：有大一點的嗎？',
+        answer: { jp: 'もう少し大きいサイズはありますか', kana: 'もうすこしおおきいサイズはありますか', romaji: 'mō sukoshi ōkii saizu wa arimasu ka' }
+      },
+      {
+        narration: '換了尺寸剛好。你走到櫃檯，看到標價 12,000。',
+        prompt: '問店員：這是含稅價嗎？',
+        answer: { jp: '税込みですか', kana: 'ぜいこみですか', romaji: 'zeikomi desu ka' }
+      },
+      {
+        npc: { jp: '税抜きの価格です。', kana: 'ぜいぬきのかかくです。', zh: '這是未稅價格。' },
+        prompt: '說你要辦免稅，並把護照拿出來',
+        answer: { jp: '免税でお願いします。パスポートはこちらです', kana: 'めんぜいでおねがいします。パスポートはこちらです', romaji: 'menzei de onegai shimasu. pasupōto wa kochira desu' },
+        tip: '免稅需本人護照正本，且商品當日同店滿 5,000 日圓（未稅）。'
+      },
+      {
+        npc: { jp: '袋はご利用になりますか？', kana: 'ふくろはごりようになりますか？', zh: '需要袋子嗎？' },
+        prompt: '說：請給我袋子',
+        answer: { jp: '袋をください', kana: 'ふくろをください', romaji: 'fukuro o kudasai' }
+      }
+    ]
+  },
+
+  {
+    id: 'hotel_checkin',
+    scenario: 'hotel',
+    title: '飯店・入住與寄行李',
+    emoji: '🛎️',
+    intro: '下午一點，離 check-in 時間還有兩小時，但你們拖著四個行李箱。',
+    steps: [
+      {
+        npc: { jp: 'いらっしゃいませ。', kana: 'いらっしゃいませ。', zh: '歡迎光臨。' },
+        prompt: '說：用「陳」的名字訂房，要辦入住',
+        answer: { jp: '陳の名前で予約しています。チェックインお願いします', kana: 'ちんのなまえでよやくしています。チェックインおねがいします', romaji: 'chin no namae de yoyaku shite imasu. chekku in onegai shimasu' }
+      },
+      {
+        npc: { jp: '申し訳ございません、チェックインは三時からです。', kana: 'もうしわけございません、チェックインはさんじからです。', zh: '很抱歉，入住是三點開始。' },
+        prompt: '請對方幫忙寄放行李',
+        answer: { jp: '荷物を預かっていただけますか', kana: 'にもつをあずかっていただけますか', romaji: 'nimotsu o azukatte itadakemasu ka' }
+      },
+      {
+        npc: { jp: 'はい、お預かりいたします。', kana: 'はい、おあずかりいたします。', zh: '好的，我們幫您保管。' },
+        prompt: '問：早餐幾點開始？',
+        answer: { jp: '朝食は何時からですか', kana: 'ちょうしょくはなんじからですか', romaji: 'chōshoku wa nan-ji kara desu ka' }
+      },
+      {
+        narration: '三點你回到飯店，順利拿到房卡。進房後想連 Wi-Fi。',
+        prompt: '請櫃檯告訴你 Wi-Fi 密碼',
+        answer: { jp: 'Wi-Fiのパスワードを教えてください', kana: 'ワイファイのパスワードをおしえてください', romaji: 'Wi-Fi no pasuwādo o oshiete kudasai' }
+      },
+      {
+        narration: '房間裡毛巾少了一條。',
+        prompt: '打電話到櫃檯：再給我一條毛巾好嗎？',
+        answer: { jp: 'タオルをもう一枚いただけますか', kana: 'タオルをもういちまいいただけますか', romaji: 'taoru o mō ichi-mai itadakemasu ka' }
+      },
+      {
+        prompt: '最後確認：退房幾點？',
+        answer: { jp: 'チェックアウトは何時ですか', kana: 'チェックアウトはなんじですか', romaji: 'chekku auto wa nan-ji desu ka' }
+      }
+    ]
+  }
+];
+
+const DIALOGUE_BY_ID = DIALOGUES.reduce((m, d) => (m[d.id] = d, m), {});
+
+/* ==========================================================================
+   「一日東京」交錯模擬（Day 22 後解鎖）
+   ========================================================================== */
+
+const TOKYO_DAY = {
+  id: 'tokyo',
+  title: '一日東京',
+  emoji: '🗼',
+  stations: [
+    {
+      place: '① 成田機場・車站櫃檯',
+      emoji: '🛬',
+      narration: '飛機落地，你們拖著行李來到車站。第一件事：幫全家買 Suica。',
+      steps: [
+        { prompt: '說：請給我 Suica 卡（用「〜をください」）', answer: { jp: 'スイカをください', kana: 'スイカをください', romaji: 'Suika o kudasai' } },
+        { prompt: '說：四張，麻煩你了', answer: { jp: '四枚お願いします', kana: 'よんまいおねがいします', romaji: 'yon-mai onegai shimasu' } },
+        { npc: { jp: '一枚二千円になります。', kana: 'いちまいにせんえんになります。', zh: '一張兩千日圓。' }, prompt: '問：（全部）多少錢？', answer: { jp: '全部でいくらですか', kana: 'ぜんぶでいくらですか', romaji: 'zenbu de ikura desu ka' } }
+      ]
+    },
+    {
+      place: '② 月台',
+      emoji: '🚃',
+      narration: '你們刷卡進站，但月台有兩個方向。',
+      steps: [
+        { prompt: '問站務員：這班車有到上野嗎？', answer: { jp: 'この電車は上野に行きますか', kana: 'このでんしゃはうえのにいきますか', romaji: 'kono densha wa ueno ni ikimasu ka' } },
+        { npc: { jp: 'いいえ、六番線です。', kana: 'いいえ、ろくばんせんです。', zh: '不是，是六號月台。' }, prompt: '沒聽清楚，請他說慢一點', answer: { jp: 'ゆっくり話してください', kana: 'ゆっくりはなしてください', romaji: 'yukkuri hanashite kudasai' } }
+      ]
+    },
+    {
+      place: '③ 飯店櫃檯（寄行李）',
+      emoji: '🏨',
+      narration: '中午抵達飯店，離 check-in 還有三小時。',
+      steps: [
+        { prompt: '說：用「陳」的名字訂房', answer: { jp: '陳の名前で予約しています', kana: 'ちんのなまえでよやくしています', romaji: 'chin no namae de yoyaku shite imasu' } },
+        { prompt: '請他們幫忙寄放行李', answer: { jp: '荷物を預かっていただけますか', kana: 'にもつをあずかっていただけますか', romaji: 'nimotsu o azukatte itadakemasu ka' } }
+      ]
+    },
+    {
+      place: '④ 食券機拉麵店',
+      emoji: '🍜',
+      narration: '肚子餓了。巷口一家拉麵店門口有台食券機。',
+      steps: [
+        { prompt: '按鈕看不懂，請店員推薦', answer: { jp: 'すみません、おすすめを教えてください', kana: 'すみません、おすすめをおしえてください', romaji: 'sumimasen, osusume o oshiete kudasai' } },
+        { prompt: '孩子對蛋過敏，告訴店員', answer: { jp: '卵はアレルギーがあります', kana: 'たまごはアレルギーがあります', romaji: 'tamago wa arerugī ga arimasu' } },
+        { prompt: '吃完離開時說一句', answer: { jp: 'ごちそうさまでした', kana: 'ごちそうさまでした', romaji: 'gochisōsama deshita' } }
+      ]
+    },
+    {
+      place: '⑤ 藥妝店・退稅',
+      emoji: '🛍️',
+      narration: '下午的藥妝店擠滿了人，你抱著一堆東西走到櫃檯。',
+      steps: [
+        { prompt: '說：只買這些', answer: { jp: 'これだけです', kana: 'これだけです', romaji: 'kore dake desu' } },
+        { prompt: '問：這是含稅價嗎？', answer: { jp: '税込みですか', kana: 'ぜいこみですか', romaji: 'zeikomi desu ka' } },
+        { prompt: '說你要辦免稅，並出示護照', answer: { jp: '免税でお願いします。パスポートはこちらです', kana: 'めんぜいでおねがいします。パスポートはこちらです', romaji: 'menzei de onegai shimasu. pasupōto wa kochira desu' } }
+      ]
+    },
+    {
+      place: '⑥ 迷路了',
+      emoji: '🧭',
+      narration: '走出藥妝店，天黑了，Google Map 定位一直漂移。',
+      steps: [
+        { prompt: '叫住路人，說你只懂一點日語', answer: { jp: 'すみません、日本語が少しだけわかります', kana: 'すみません、にほんごがすこしだけわかります', romaji: 'sumimasen, nihongo ga sukoshi dake wakarimasu' } },
+        { prompt: '把手機拿給他看，說：我想去這裡', answer: { jp: 'ここに行きたいです', kana: 'ここにいきたいです', romaji: 'koko ni ikitai desu' } },
+        { npc: { jp: 'この道をまっすぐ行って、二つ目の角を左です。', kana: 'このみちをまっすぐいって、ふたつめのかどをひだりです。', zh: '這條路直走，第二個轉角左轉。' }, prompt: '太複雜了，請他幫你寫下來', answer: { jp: '書いてもらえますか', kana: 'かいてもらえますか', romaji: 'kaite moraemasu ka' } }
+      ]
+    },
+    {
+      place: '⑦ 回飯店 check-in',
+      emoji: '🛎️',
+      narration: '終於回到飯店。櫃檯人員朝你微笑。',
+      steps: [
+        { prompt: '說：我要辦入住', answer: { jp: 'チェックインお願いします', kana: 'チェックインおねがいします', romaji: 'chekku in onegai shimasu' } },
+        { prompt: '問：早餐幾點開始？', answer: { jp: '朝食は何時からですか', kana: 'ちょうしょくはなんじからですか', romaji: 'chōshoku wa nan-ji kara desu ka' } },
+        { prompt: '拿到房卡，道謝', answer: { jp: 'ありがとうございます', kana: 'ありがとうございます', romaji: 'arigatō gozaimasu' } }
+      ]
+    }
+  ]
+};
+
+/* 每日反思提示語 */
+const REFLECTION_PROMPTS = [
+  '今天哪句最難說出口？',
+  '今天有哪一句，你覺得到了東京一定用得上？',
+  '今天卡住的時候，你會用哪句話求救？',
+  '如果現在店員對你講一長串日文，你的第一句反應是什麼？',
+  '今天哪個場景，你已經可以不看提示就講完？',
+  '今天最順的一句是哪句？把它再唸三遍。'
+];
+
+</script>
+<script>
+/* ==========================================================================
+   東京旅遊日語 30 天衝刺 — 應用邏輯
+   ========================================================================== */
+
+/* ---------------------------- 小工具 ---------------------------- */
+const $ = (s, r) => (r || document).querySelector(s);
+const $$ = (s, r) => Array.prototype.slice.call((r || document).querySelectorAll(s));
+const DAY_MS = 86400000;
+
+function pad2(n) { return n < 10 ? '0' + n : '' + n; }
+function dayKey(d) { d = d || new Date(); return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate()); }
+function monthKey(d) { d = d || new Date(); return d.getFullYear() + '-' + pad2(d.getMonth() + 1); }
+function parseKey(k) { const p = k.split('-'); return new Date(+p[0], +p[1] - 1, +p[2]); }
+function startOfToday() { const d = new Date(); d.setHours(0, 0, 0, 0); return d.getTime(); }
+function endOfToday() { return startOfToday() + DAY_MS - 1; }
+function daysBetween(aKey, bKey) { return Math.round((parseKey(bKey) - parseKey(aKey)) / DAY_MS); }
+function daysLeft() { return Math.max(0, Math.ceil((TRIP_DATE - startOfToday()) / DAY_MS)); }
+function esc(s) { return String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
+function shuffle(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[a[i], a[j]] = [a[j], a[i]]; } return a; }
+function sample(a, n) { return shuffle(a).slice(0, n); }
+
+/* ---------------------------- 狀態 ---------------------------- */
+const STORE_KEY = 'jp-sprint-tokyo-v1';
+
+function defaultState() {
+  return {
+    version: 1,
+    createdAt: Date.now(),
+    startDay: dayKey(),
+    cards: {},
+    diag: { done: false, cursor: 0, sessions: 0, lastDay: null, order: null, known: 0, rusty: 0 },
+    streak: { count: 0, best: 0, lastDay: null, freezes: 2, freezeMonth: monthKey(), frozen: [] },
+    days: {},
+    tokyo: { runs: [] },
+    settings: { newPerDay: 8, romaji: true },
+    reflections: []
+  };
+}
+
+let S = defaultState();
+
+function load() {
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      S = Object.assign(defaultState(), parsed);
+      S.streak = Object.assign(defaultState().streak, parsed.streak || {});
+      S.diag = Object.assign(defaultState().diag, parsed.diag || {});
+      S.settings = Object.assign(defaultState().settings, parsed.settings || {});
+      S.tokyo = Object.assign(defaultState().tokyo, parsed.tokyo || {});
+    }
+  } catch (e) { console.warn('讀取進度失敗，改用全新狀態', e); }
+  return S;
+}
+function save() {
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(S)); }
+  catch (e) { toast('⚠️ 儲存失敗，瀏覽器空間可能已滿'); }
+}
+
+function cs(id) {
+  if (!S.cards[id]) S.cards[id] = { interval: 0, repetitions: 0, easeFactor: 2.5, dueDate: null, status: 'new', lastReviewed: null, lapses: 0 };
+  return S.cards[id];
+}
+function dayRec(k) {
+  if (!S.days[k]) S.days[k] = { stages: {}, done: false, reviewed: 0, introduced: 0, kanjiRight: 0, kanjiTotal: 0, reflection: '', dialogId: null };
+  return S.days[k];
+}
+
+/* ---------------------------- SRS 排程引擎 ---------------------------- */
+/* 依規格書實作：簡化 SM-2 ＋ 衝刺上限 */
+function schedule(card, quality) {
+  if (quality < 3) {
+    card.repetitions = 0;
+    card.interval = 1;                       // 忘記 → 明天再見
+    card.lapses = (card.lapses || 0) + 1;
+  } else {
+    if (card.repetitions === 0) card.interval = 1;
+    else if (card.repetitions === 1) card.interval = 3;   // 衝刺版：壓縮原 SM-2 的 6 天
+    else card.interval = Math.round(card.interval * card.easeFactor);
+    card.repetitions += 1;
+  }
+  card.easeFactor = Math.max(1.3,
+    card.easeFactor + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02)));
+  // 衝刺上限：間隔不超過「距出發剩餘天數的一半」
+  const dLeft = Math.ceil((TRIP_DATE - Date.now()) / 86400000);
+  card.interval = Math.min(card.interval, Math.max(1, Math.floor(dLeft / 2)));
+  card.dueDate = Date.now() + card.interval * 86400000;
+  card.status = 'learning';
+  card.lastReviewed = Date.now();
+  return card;
+}
+
+function dueCardIds() {
+  const end = endOfToday();
+  return CARDS.filter(c => {
+    const st = S.cards[c.id];
+    return st && st.status === 'learning' && st.dueDate != null && st.dueDate <= end;
+  }).map(c => c.id);
+}
+
+/* ---------------------------- 30 天課表 ---------------------------- */
+const ALL_POOLS = ['basics', 'repair', 'restaurant', 'shopping', 'transport', 'hotel', 'kanji'];
+const PHASES = [
+  { key: 'diag', name: '診斷重啟', from: 1, to: 3, pools: [], desc: '全卡診斷分流' },
+  { key: 'A', name: '區塊 A', from: 4, to: 9, pools: ['basics', 'repair', 'restaurant'], desc: '問候／數字／時間 ＋ 餐廳' },
+  { key: 'B', name: '區塊 B', from: 10, to: 15, pools: ['shopping', 'transport'], desc: '購物 ＋ 交通問路' },
+  { key: 'C', name: '區塊 C', from: 16, to: 21, pools: ['hotel', 'kanji'], desc: '飯店 ＋ 招牌漢字閱讀' },
+  { key: 'MIX', name: '交錯模擬', from: 22, to: 27, pools: ALL_POOLS, desc: '「一日東京」串場模擬' },
+  { key: 'FINE', name: '高頻精煉', from: 28, to: 30, pools: ALL_POOLS, starOnly: true, desc: '只練高頻句 ＋ 修復策略' }
+];
+
+/* 依「已過天數 / 到出發的總跨度」等比對映到 30 天課表 */
+function virtualDay() {
+  const total = Math.max(1, Math.round((parseKey(dayKey(new Date(TRIP_DATE))) - parseKey(S.startDay)) / DAY_MS));
+  const elapsed = Math.max(0, daysBetween(S.startDay, dayKey()));
+  const p = Math.min(1, elapsed / total);
+  return Math.min(30, Math.max(1, Math.floor(p * 29) + 1));
+}
+/* 診斷做完就進正課，就算日曆上還在 Day 1–3 也一樣 */
+function curriculumDay() {
+  const d = virtualDay();
+  return S.diag.done ? Math.max(4, d) : d;
+}
+function currentPhase() {
+  if (!S.diag.done) return PHASES[0];
+  const d = curriculumDay();
+  return PHASES.find(p => d >= p.from && d <= p.to) || PHASES[PHASES.length - 1];
+}
+function tokyoUnlocked() {
+  return S.diag.done && (curriculumDay() >= 22 || daysLeft() <= 6);
+}
+
+/* ---------------------------- 掌握度 ---------------------------- */
+function cardLevel(c) {
+  const st = S.cards[c.id];
+  if (!st) return 'new';
+  if (st.status === 'known') return 'strong';
+  if (st.repetitions >= 2 && st.interval >= 3) return 'strong';
+  if (st.status === 'learning' || st.diagRusty) return 'weak';
+  return 'new';
+}
+function groupStats(group) {
+  const cards = CARDS.filter(c => group.members.indexOf(c.scenario) >= 0);
+  const r = { strong: 0, weak: 0, new: 0, total: cards.length };
+  cards.forEach(c => r[cardLevel(c)]++);
+  return r;
+}
+
+/* ---------------------------- streak ---------------------------- */
+function refreshFreezeMonth() {
+  if (S.streak.freezeMonth !== monthKey()) {
+    S.streak.freezeMonth = monthKey();
+    S.streak.freezes = 2;
+    save();
+  }
+}
+function streakGap() {
+  if (!S.streak.lastDay) return null;
+  return daysBetween(S.streak.lastDay, dayKey());
+}
+function canUseFreeze() {
+  const gap = streakGap();
+  return gap === 2 && S.streak.freezes > 0 && S.streak.count > 0;
+}
+function useFreeze() {
+  if (!canUseFreeze()) return;
+  const missed = dayKey(new Date(startOfToday() - DAY_MS));
+  S.streak.freezes--;
+  S.streak.frozen.push(missed);
+  S.streak.lastDay = missed;     // 補簽昨天，連續紀錄不中斷
+  save();
+  toast('🧊 補簽卡已使用，連續紀錄保住了！');
+  render();
+}
+function bumpStreak() {
+  const t = dayKey();
+  if (S.streak.lastDay === t) return;
+  const gap = S.streak.lastDay ? daysBetween(S.streak.lastDay, t) : null;
+  S.streak.count = (gap === 1) ? S.streak.count + 1 : 1;
+  S.streak.lastDay = t;
+  S.streak.best = Math.max(S.streak.best || 0, S.streak.count);
+}
+/* 開啟時檢查是否已斷簽（間隔 >2 天且沒補簽） */
+function checkStreakBroken() {
+  const gap = streakGap();
+  if (gap != null && gap > 2) S.streak.count = 0;
+}
+
+/* ---------------------------- 每日內容組裝 ---------------------------- */
+function poolCards(phase) {
+  let list = CARDS.filter(c => phase.pools.indexOf(c.scenario) >= 0);
+  if (phase.starOnly) {
+    const stars = list.filter(c => c.star);
+    if (stars.length) list = stars;
+  }
+  return list;
+}
+
+function newCardsToday(phase, dueCount) {
+  const rec = dayRec(dayKey());
+  const limit = (dueCount > 25 ? 4 : S.settings.newPerDay) - rec.introduced;
+  if (limit <= 0) return [];
+  const pool = poolCards(phase).filter(c => {
+    const st = S.cards[c.id];
+    return !st || st.status === 'new';
+  });
+  // 診斷標為「生疏」的優先，其次高頻卡
+  const rank = c => {
+    const st = S.cards[c.id];
+    return (st && st.diagRusty ? 0 : 2) + (c.star ? 0 : 1);
+  };
+  pool.sort((a, b) => rank(a) - rank(b));
+  return pool.slice(0, limit);
+}
+
+function buildWarmup() {
+  const yStart = startOfToday() - DAY_MS, yEnd = startOfToday() - 1;
+  let pool = CARDS.filter(c => {
+    const st = S.cards[c.id];
+    return st && st.lastReviewed && st.lastReviewed >= yStart && st.lastReviewed <= yEnd;
+  });
+  if (pool.length < 4) {
+    const extra = CARDS.filter(c => {
+      const st = S.cards[c.id];
+      return st && st.status !== 'new' && pool.indexOf(c) < 0;
+    });
+    pool = pool.concat(sample(extra, 8 - pool.length));
+  }
+  if (pool.length < 4) return [];
+  const picked = sample(pool, Math.min(5, pool.length));
+  return picked.map(c => {
+    const distractPool = CARDS.filter(x => x.id !== c.id && x.type === c.type);
+    const wrong = sample(distractPool.length >= 3 ? distractPool : CARDS.filter(x => x.id !== c.id), 3);
+    return { card: c, options: shuffle([c].concat(wrong)) };
+  });
+}
+
+function buildSrsQueue(phase) {
+  const due = dueCardIds();
+  const newOnes = newCardsToday(phase, due.length).map(c => c.id);
+  newOnes.forEach(id => { const st = cs(id); st.status = 'learning'; st.dueDate = Date.now(); });
+  if (newOnes.length) { dayRec(dayKey()).introduced += newOnes.length; save(); }
+
+  let queue = shuffle(due).concat(newOnes);
+
+  // 末期交錯：已標記「已經會了」的卡隨機抽查
+  if (phase.key === 'MIX' || phase.key === 'FINE') {
+    const known = CARDS.filter(c => S.cards[c.id] && S.cards[c.id].status === 'known');
+    sample(known, Math.min(3, known.length)).forEach(c => queue.push(c.id));
+  }
+  return queue.map(id => ({ id: id, isNew: newOnes.indexOf(id) >= 0, isSpot: S.cards[id].status === 'known' }));
+}
+
+function pickDialogue(phase) {
+  let pool = DIALOGUES.filter(d => phase.pools.indexOf(d.scenario) >= 0);
+  if (!pool.length) pool = DIALOGUES;
+  return pool[curriculumDay() % pool.length];
+}
+
+function buildKanjiQuiz(phase) {
+  const all = CARDS.filter(c => c.scenario === 'kanji');
+  const rank = c => {
+    const st = S.cards[c.id];
+    if (st && st.status === 'learning') return 0;
+    if (c.star) return 1;
+    return phase.key === 'C' || phase.key === 'MIX' || phase.key === 'FINE' ? 2 : 3;
+  };
+  const ordered = shuffle(all).sort((a, b) => rank(a) - rank(b));
+  return ordered.slice(0, 6).map(c => {
+    const wrong = sample(all.filter(x => x.id !== c.id), 3);
+    return { card: c, options: shuffle([c].concat(wrong)) };
+  });
+}
+
+/* 從一句答案裡找出對應的卡片（用來把對話自評餵回 SRS） */
+function linkedCards(jp) {
+  return CARDS.filter(c => c.jp.indexOf('〜') < 0 && c.jp.length >= 4 && jp.indexOf(c.jp) >= 0);
+}
+
+/* ==========================================================================
+   畫面
+   ========================================================================== */
+let route = 'home';
+let L = null;   // 每日課程 session
+let T = null;   // 一日東京 session
+let D = null;   // 診斷 session
+
+const app = () => $('#app');
+
+function toast(msg) {
+  const t = $('#toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => t.classList.remove('show'), 2600);
+}
+
+function render() {
+  const el = app();
+  el.scrollTop = 0;
+  window.scrollTo(0, 0);
+  if (route === 'home') el.innerHTML = viewHome();
+  else if (route === 'diag') el.innerHTML = viewDiag();
+  else if (route === 'lesson') el.innerHTML = viewLesson();
+  else if (route === 'tokyo') el.innerHTML = viewTokyo();
+  else if (route === 'browse') el.innerHTML = viewBrowse();
+  else if (route === 'backup') el.innerHTML = viewBackup();
+  afterRender();
+}
+function go(r) { route = r; render(); }
+
+/* ---------------------------- 首頁 ---------------------------- */
+function ring(pct, color, size) {
+  size = size || 72;
+  const r = (size - 10) / 2, c = 2 * Math.PI * r;
+  return `<svg class="ring" viewBox="0 0 ${size} ${size}" width="${size}" height="${size}">
+    <circle cx="${size / 2}" cy="${size / 2}" r="${r}" fill="none" stroke="rgba(0,0,0,.08)" stroke-width="8"/>
+    <circle cx="${size / 2}" cy="${size / 2}" r="${r}" fill="none" stroke="${color}" stroke-width="8"
+      stroke-linecap="round" stroke-dasharray="${c}" stroke-dashoffset="${c * (1 - pct)}"
+      transform="rotate(-90 ${size / 2} ${size / 2})"/>
+  </svg>`;
+}
+
+function viewHome() {
+  refreshFreezeMonth();
+  checkStreakBroken();
+  const dl = daysLeft();
+  const phase = currentPhase();
+  const vd = curriculumDay();
+  const rec = dayRec(dayKey());
+  const due = dueCardIds().length;
+  const doneToday = rec.done;
+  const totalTasks = 5;
+  const doneStages = Object.keys(rec.stages).filter(k => rec.stages[k]).length;
+
+  let banner = '';
+  if (canUseFreeze()) {
+    banner = `<div class="banner">
+      <div>🧊 昨天沒練到。這個月還有 <b>${S.streak.freezes}</b> 張補簽卡，要用一張保住 ${S.streak.count} 天連續紀錄嗎？</div>
+      <button class="btn small" data-act="freeze">用補簽卡</button>
+    </div>`;
+  }
+
+  if (!S.diag.done) {
+    const total = CARDS.length;
+    const doneN = S.diag.cursor;
+    return `
+    ${header()}
+    <div class="countdown">
+      <div class="cd-label">距離東京</div>
+      <div class="cd-num">${dl}</div>
+      <div class="cd-label">天 ・ 2026 / 08 / 27 🛫</div>
+    </div>
+    <div class="card hero">
+      <div class="hero-emoji">🧭</div>
+      <h2>先做一次診斷</h2>
+      <p class="muted">你不是從零開始 —— 先快速掃過全部 ${total} 張卡，把「已經會的」挑掉，剩下的才進入複習排程。分 3 天完成，每天最多 50 張。</p>
+      <div class="progress"><div class="progress-fill" style="width:${(doneN / total * 100).toFixed(1)}%"></div></div>
+      <div class="muted small">已分流 ${doneN} / ${total} 張 ・ 已完成 ${S.diag.sessions} / 3 次</div>
+      <button class="btn primary big" data-act="startDiag">${doneN ? '繼續診斷' : '開始診斷'}</button>
+    </div>
+    ${footerNav()}`;
+  }
+
+  const groups = SCENARIO_GROUPS.map(g => {
+    const st = groupStats(g);
+    const pct = st.total ? st.strong / st.total : 0;
+    const color = pct >= .7 ? 'var(--green)' : (st.strong + st.weak) > 0 ? 'var(--yellow)' : 'var(--gray)';
+    return `<div class="scen">
+      <div class="scen-ring">${ring(pct, color, 64)}<span class="scen-emoji">${g.emoji}</span></div>
+      <div class="scen-name">${g.label}</div>
+      <div class="scen-num"><b>${st.strong}</b>/${st.total}</div>
+    </div>`;
+  }).join('');
+
+  const taskPct = doneToday ? 1 : doneStages / totalTasks;
+
+  return `
+  ${header()}
+  ${banner}
+  <div class="countdown">
+    <div class="cd-label">距離東京</div>
+    <div class="cd-num">${dl}</div>
+    <div class="cd-label">天 ・ 2026 / 08 / 27 🛫</div>
+  </div>
+
+  <div class="row2">
+    <div class="card stat">
+      <div class="stat-big">🔥 ${S.streak.count}</div>
+      <div class="muted small">連續學習天數</div>
+      <div class="muted xsmall">補簽卡 ${'🧊'.repeat(S.streak.freezes) || '—'} （每月 2 張）</div>
+    </div>
+    <div class="card stat">
+      <div class="ring-wrap">${ring(taskPct, doneToday ? 'var(--green)' : 'var(--primary)', 76)}
+        <div class="ring-center">${doneToday ? '✅' : doneStages + '/' + totalTasks}</div></div>
+      <div class="muted small">今日任務</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="phase-tag">Day ${vd} ・ ${phase.name}</div>
+    <div class="muted small">${phase.desc}</div>
+    <div class="due-line">今日到期 <b>${due}</b> 張${due > 25 ? '<span class="warn"> ・ 卡量偏多，今天新卡自動降為 4 張</span>' : ''}</div>
+    <button class="btn primary big" data-act="startLesson">${doneToday ? '🔁 再練一次' : '▶︎ 開始今日 30 分鐘'}</button>
+    ${doneToday ? '<div class="muted small center">今天已完成 ✨ 明天見！</div>' : ''}
+  </div>
+
+  <div class="card">
+    <h3>情境掌握度</h3>
+    <div class="scen-grid">${groups}</div>
+    <div class="legend"><span><i class="dot green"></i>熟練</span><span><i class="dot yellow"></i>生疏</span><span><i class="dot gray"></i>未學</span></div>
+  </div>
+
+  <div class="card ${tokyoUnlocked() ? 'tokyo-card' : 'locked'}">
+    <div class="tokyo-head"><span class="big-emoji">🗼</span>
+      <div><h3>「一日東京」交錯模擬</h3>
+      <div class="muted small">${tokyoUnlocked() ? '機場 → 車站 → 飯店 → 拉麵 → 退稅 → 迷路 → check-in' : `Day 22 解鎖（現在 Day ${vd}）`}</div></div>
+    </div>
+    ${tokyoUnlocked()
+      ? `<button class="btn accent big" data-act="startTokyo">${S.tokyo.runs.length ? '再闖一次' : '開始闖關'}</button>
+         ${S.tokyo.runs.length ? `<div class="muted small center">已通關 ${S.tokyo.runs.length} 次 🎌</div>` : ''}`
+      : '<div class="lock-note">🔒 尚未解鎖</div>'}
+  </div>
+
+  ${footerNav()}`;
+}
+
+function header() {
+  return `<div class="topbar">
+    <div class="brand">🏮 東京日語衝刺</div>
+    <button class="icon-btn" data-act="go-backup" title="備份">⚙️</button>
+  </div>`;
+}
+function footerNav() {
+  return `<div class="footnav">
+    <button class="btn ghost" data-act="go-browse">📚 卡片庫</button>
+    <button class="btn ghost" data-act="go-backup">💾 備份 / 還原</button>
+  </div><div class="pad"></div>`;
+}
+
+/* ---------------------------- 診斷模式 ---------------------------- */
+function startDiag() {
+  if (!S.diag.order) { S.diag.order = shuffle(CARDS.map(c => c.id)); save(); }
+  D = { count: 0, limit: 50 };
+  go('diag');
+}
+function viewDiag() {
+  const total = CARDS.length;
+  const i = S.diag.cursor;
+  if (i >= total) {
+    S.diag.done = true; save();
+    return celebrateBlock('🎉', '診斷完成！',
+      `你標記了 <b>${S.diag.known}</b> 張「已經會」、<b>${S.diag.rusty}</b> 張「生疏」。<br>
+       生疏的卡不會一次全丟給你 —— 會依 30 天課表分階段、每天約 ${S.settings.newPerDay} 張慢慢釋出。<br>
+       「已經會」的卡不進複習，但末期模擬會隨機抽查。`,
+      '進入每日課程', 'finishDiag');
+  }
+  if (D && D.count >= D.limit) {
+    return celebrateBlock('☕️', '今天的診斷完成了',
+      `已分流 ${i} / ${total} 張。<br>診斷刻意分 3 天做完 —— 一次掃太多，判斷會失準。`,
+      '回首頁', 'finishDiagSession', '不等了，繼續診斷', 'contDiag');
+  }
+  const c = CARD_BY_ID[S.diag.order[i]];
+  const sc = SCENARIOS[c.scenario];
+  return `
+  <div class="topbar"><button class="icon-btn" data-act="go-home">←</button>
+    <div class="brand">診斷分流</div><div class="counter">${i + 1} / ${total}</div></div>
+  <div class="progress slim"><div class="progress-fill" style="width:${((i) / total * 100).toFixed(1)}%"></div></div>
+  <div class="card diag-card">
+    <div class="badge" style="background:${sc.color}1a;color:${sc.color}">${sc.emoji} ${sc.name}</div>
+    <div class="diag-q">${esc(c.zh)}</div>
+    <div class="muted">心裡默唸一次日語 —— 說得出來嗎？</div>
+  </div>
+  <div class="diag-btns">
+    <button class="btn known" data-act="diagKnown">✅ 已經會了</button>
+    <button class="btn rusty" data-act="diagRusty">😅 生疏了</button>
+  </div>
+  <div class="muted small center">「已經會了」的卡不會進入每日複習，但末期模擬會隨機抽查。</div>`;
+}
+function diagAnswer(known) {
+  const id = S.diag.order[S.diag.cursor];
+  const st = cs(id);
+  if (known) {
+    st.status = 'known'; st.dueDate = null; st.diagRusty = false;
+    S.diag.known++;
+  } else {
+    // 生疏 → 納入 SRS 候補池，實際排入由 30 天課表按階段、每天 8 張釋出
+    st.status = 'new'; st.diagRusty = true; st.dueDate = null;
+    st.interval = 0; st.repetitions = 0;
+    S.diag.rusty++;
+  }
+  S.diag.cursor++;
+  D.count++;
+  if (D.count >= D.limit || S.diag.cursor >= CARDS.length) {
+    S.diag.sessions++;
+    S.diag.lastDay = dayKey();
+  }
+  save();
+  render();
+}
+
+/* ---------------------------- 每日課程 ---------------------------- */
+const STAGE_META = [
+  { key: 'warmup', name: '暖身', emoji: '☀️', mins: 3 },
+  { key: 'srs', name: '主複習', emoji: '🎴', mins: 8 },
+  { key: 'dialog', name: '情境對話', emoji: '🗣️', mins: 15 },
+  { key: 'kanji', name: '漢字快閃', emoji: '🈶', mins: 4 },
+  { key: 'reflect', name: '反思', emoji: '✍️', mins: 1 }
+];
+
+function startLesson() {
+  const phase = currentPhase();
+  const due = dueCardIds();
+  L = {
+    phase: phase,
+    stage: 0, idx: 0, flipped: false, picked: null, revealed: false,
+    warmup: buildWarmup(),
+    srs: buildSrsQueue(phase),
+    dialog: pickDialogue(phase),
+    kanji: buildKanjiQuiz(phase),
+    stats: { warmupRight: 0, warmupTotal: 0, srsDone: 0, kanjiRight: 0, kanjiTotal: 0, dialogDone: 0 },
+    overload: due.length > 25,
+    rec: null
+  };
+  dayRec(dayKey()).dialogId = L.dialog.id;
+  save();
+  if (L.overload) toast('今天到期卡超過 25 張，新卡自動降為 4 張 👍');
+  go('lesson');
+}
+
+function lessonBar() {
+  const segs = STAGE_META.map((s, i) => {
+    const cls = i < L.stage ? 'done' : i === L.stage ? 'cur' : '';
+    return `<div class="seg ${cls}" title="${s.name}"><span>${s.emoji}</span></div>`;
+  }).join('');
+  return `<div class="topbar"><button class="icon-btn" data-act="quitLesson">✕</button>
+    <div class="brand">${STAGE_META[Math.min(L.stage, 4)].emoji} ${STAGE_META[Math.min(L.stage, 4)].name}
+    <span class="muted xsmall">約 ${STAGE_META[Math.min(L.stage, 4)].mins} 分</span></div>
+    <div class="counter"></div></div>
+    <div class="segbar">${segs}</div>`;
+}
+
+function viewLesson() {
+  if (!L) { route = 'home'; return viewHome(); }
+  if (L.stage === 0) return lessonBar() + stageWarmup();
+  if (L.stage === 1) return lessonBar() + stageSrs();
+  if (L.stage === 2) return lessonBar() + stageDialog();
+  if (L.stage === 3) return lessonBar() + stageKanji();
+  if (L.stage === 4) return lessonBar() + stageReflect();
+  return stageCelebrate();
+}
+
+function nextStage() {
+  const rec = dayRec(dayKey());
+  rec.stages[STAGE_META[L.stage].key] = true;
+  L.stage++; L.idx = 0; L.flipped = false; L.picked = null; L.revealed = false;
+  if (L.stage >= 5) finishDay();
+  save(); render();
+}
+
+/* --- 1. 暖身 --- */
+function stageWarmup() {
+  if (!L.warmup.length) return skipBlock('昨天沒有複習紀錄，暖身先跳過 ☀️');
+  if (L.idx >= L.warmup.length) return doneBlock(`暖身完成 ${L.stats.warmupRight} / ${L.stats.warmupTotal} ✅`);
+  const q = L.warmup[L.idx];
+  const opts = q.options.map(o => {
+    let cls = '';
+    if (L.picked) {
+      if (o.id === q.card.id) cls = 'right';
+      else if (o.id === L.picked) cls = 'wrong';
+    }
+    return `<button class="opt ${cls}" data-act="warmupPick" data-id="${o.id}">${esc(o.zh)}</button>`;
+  }).join('');
+  return `
+  <div class="counter-line">${L.idx + 1} / ${L.warmup.length}</div>
+  <div class="card quiz-card">
+    <div class="muted small">這句是什麼意思？</div>
+    <div class="jp-quiz">${esc(q.card.jp)}</div>
+    <div class="kana">${esc(q.card.kana)}</div>
+  </div>
+  <div class="opts">${opts}</div>
+  ${L.picked ? '<button class="btn primary big" data-act="warmupNext">下一題 →</button>' : ''}`;
+}
+
+/* --- 2. SRS 主複習 --- */
+function stageSrs() {
+  if (!L.srs.length) return skipBlock('今天沒有到期的卡，直接進下一關 🎴');
+  if (L.idx >= L.srs.length) return doneBlock(`主複習完成 ${L.stats.srsDone} 張 🎴`);
+  const item = L.srs[L.idx];
+  const c = CARD_BY_ID[item.id];
+  const sc = SCENARIOS[c.scenario];
+  const badge = item.isNew ? '<span class="tag new">新卡</span>'
+    : item.isSpot ? '<span class="tag spot">抽查</span>' : '';
+  return `
+  <div class="counter-line">${L.idx + 1} / ${L.srs.length}</div>
+  <div class="flip ${L.flipped ? 'flipped' : ''}" data-act="flip">
+    <div class="flip-inner">
+      <div class="face front">
+        <div class="badge" style="background:${sc.color}1a;color:${sc.color}">${sc.emoji} ${sc.name} ${badge}</div>
+        <div class="zh-big">${esc(c.zh)}</div>
+        <div class="say-hint">🗣️ 先大聲說出日語<br><span class="muted small">再點卡片翻開對答案</span></div>
+      </div>
+      <div class="face back">
+        <div class="jp-big">${esc(c.jp)}</div>
+        <div class="kana">${esc(c.kana)}</div>
+        ${S.settings.romaji ? `<div class="romaji">${esc(c.romaji)}</div>` : ''}
+        <div class="zh-small">${esc(c.zh)}</div>
+      </div>
+    </div>
+  </div>
+  ${L.flipped ? gradeButtons('srsGrade') : '<div class="muted center tap-hint">👆 說完了就點卡片</div>'}`;
+}
+
+function gradeButtons(act) {
+  const g = [
+    [0, '完全忘記', 'g0'], [2, '很勉強', 'g2'], [3, '想起來了', 'g3'],
+    [4, '順暢', 'g4'], [5, '秒答', 'g5']
+  ];
+  return `<div class="grades">${g.map(x =>
+    `<button class="grade ${x[2]}" data-act="${act}" data-q="${x[0]}"><b>${x[1]}</b><span>${x[0]}</span></button>`
+  ).join('')}</div>`;
+}
+
+/* --- 3. 情境對話 --- */
+function stageDialog() {
+  const d = L.dialog;
+  if (L.idx >= d.steps.length) return doneBlock(`「${d.title}」走完了 ${d.emoji}`);
+  const step = d.steps[L.idx];
+  const intro = L.idx === 0 ? `<div class="intro">${d.emoji} <b>${esc(d.title)}</b><br><span class="muted">${esc(d.intro)}</span></div>` : '';
+  const npc = step.npc ? `<div class="npc">
+      <div class="npc-avatar">🧑‍🍳</div>
+      <div class="bubble"><div class="bubble-jp">${esc(step.npc.jp)}</div>
+      <div class="bubble-kana">${esc(step.npc.kana)}</div>
+      <div class="bubble-zh">${esc(step.npc.zh)}</div></div></div>` : '';
+  const nar = step.narration ? `<div class="narration">${esc(step.narration)}</div>` : '';
+  const ans = L.revealed ? `
+    <div class="card answer-card">
+      <div class="muted small">參考答案</div>
+      <div class="jp-big">${esc(step.answer.jp)}</div>
+      <div class="kana">${esc(step.answer.kana)}</div>
+      ${S.settings.romaji ? `<div class="romaji">${esc(step.answer.romaji)}</div>` : ''}
+      ${step.tip ? `<div class="tip">💡 ${esc(step.tip)}</div>` : ''}
+    </div>
+    ${gradeButtons('dialogGrade')}`
+    : `<button class="btn primary big" data-act="reveal">看參考答案</button>`;
+
+  return `
+  <div class="counter-line">${L.idx + 1} / ${d.steps.length}</div>
+  ${intro}${nar}${npc}
+  <div class="card prompt-card">
+    <div class="muted small">換你開口</div>
+    <div class="prompt">${esc(step.prompt)}</div>
+    ${recorderUI()}
+  </div>
+  ${ans}`;
+}
+
+/* --- 4. 漢字快閃 --- */
+function stageKanji() {
+  if (L.idx >= L.kanji.length) return doneBlock(`漢字快閃 ${L.stats.kanjiRight} / ${L.stats.kanjiTotal} 🈶`);
+  const q = L.kanji[L.idx];
+  const opts = q.options.map(o => {
+    let cls = '';
+    if (L.picked) {
+      if (o.id === q.card.id) cls = 'right';
+      else if (o.id === L.picked) cls = 'wrong';
+    }
+    return `<button class="opt ${cls}" data-act="kanjiPick" data-id="${o.id}">${esc(o.zh)}</button>`;
+  }).join('');
+  return `
+  <div class="counter-line">${L.idx + 1} / ${L.kanji.length}</div>
+  <div class="card sign-card">
+    <div class="sign">${esc(q.card.jp)}</div>
+    ${L.picked ? `<div class="kana">${esc(q.card.kana)} ・ ${esc(q.card.romaji)}</div>` : ''}
+  </div>
+  <div class="opts">${opts}</div>
+  ${L.picked ? '<button class="btn primary big" data-act="kanjiNext">下一張 →</button>' : ''}`;
+}
+
+/* --- 5. 反思 --- */
+function stageReflect() {
+  const p = REFLECTION_PROMPTS[new Date().getDate() % REFLECTION_PROMPTS.length];
+  const prev = dayRec(dayKey()).reflection || '';
+  return `
+  <div class="card">
+    <div class="hero-emoji">✍️</div>
+    <h2>${esc(p)}</h2>
+    <p class="muted small">寫一行就好，30 秒。寫下來的東西，明天你會記得。</p>
+    <input id="reflect-input" class="input" type="text" maxlength="120" placeholder="打一行字…" value="${esc(prev)}">
+    <button class="btn primary big" data-act="saveReflect">完成今天 🎉</button>
+    <button class="btn ghost" data-act="saveReflect" data-skip="1">跳過</button>
+  </div>`;
+}
+
+function stageCelebrate() {
+  const rec = dayRec(dayKey());
+  return `<div class="confetti">${confettiPieces('🎊🎉✨🏮🗼🍜').map((e, i) => `<span style="--i:${i}">${e}</span>`).join('')}</div>
+  <div class="card hero celebrate">
+    <div class="hero-emoji big">🎉</div>
+    <h2>今天完成了！</h2>
+    <div class="recap">
+      <div><b>${rec.reviewed}</b><span>複習卡</span></div>
+      <div><b>${rec.introduced}</b><span>新卡</span></div>
+      <div><b>${rec.kanjiRight}/${rec.kanjiTotal}</b><span>漢字</span></div>
+    </div>
+    <div class="streak-line">🔥 連續 <b>${S.streak.count}</b> 天 ・ 距東京還有 <b>${daysLeft()}</b> 天</div>
+    ${rec.reflection ? `<div class="quote">「${esc(rec.reflection)}」</div>` : ''}
+    <button class="btn primary big" data-act="go-home">回首頁</button>
+  </div>`;
+}
+
+/* Array.from 而非 split('')：emoji 是 UTF-16 代理對，split('') 會把它切成兩半 */
+function confettiPieces(str) { return Array.from(str); }
+
+function skipBlock(msg) {
+  return `<div class="card hero"><div class="hero-emoji">⏭️</div><p>${esc(msg)}</p>
+    <button class="btn primary big" data-act="nextStage">繼續 →</button></div>`;
+}
+function doneBlock(msg) {
+  return `<div class="card hero"><div class="hero-emoji">✅</div><h2>${msg}</h2>
+    <button class="btn primary big" data-act="nextStage">下一關 →</button></div>`;
+}
+function celebrateBlock(emoji, title, html, btn, act, btn2, act2) {
+  return `<div class="card hero"><div class="hero-emoji">${emoji}</div><h2>${title}</h2>
+    <p class="muted">${html}</p>
+    <button class="btn primary big" data-act="${act}">${btn}</button>
+    ${btn2 ? `<button class="btn ghost" data-act="${act2}">${btn2}</button>` : ''}</div>`;
+}
+
+function finishDay() {
+  const rec = dayRec(dayKey());
+  rec.done = true;
+  bumpStreak();
+  save();
+}
+
+/* ---------------------------- 一日東京 ---------------------------- */
+function startTokyo() {
+  const flat = [];
+  TOKYO_DAY.stations.forEach((st, si) => st.steps.forEach((s, i) => flat.push({ st: si, first: i === 0, step: s })));
+  T = { i: 0, flat: flat, revealed: false, scores: [] };
+  go('tokyo');
+}
+function viewTokyo() {
+  if (!T) { route = 'home'; return viewHome(); }
+  if (T.i >= T.flat.length) {
+    const avg = T.scores.length ? (T.scores.reduce((a, b) => a + b, 0) / T.scores.length).toFixed(1) : '—';
+    return `<div class="confetti">${confettiPieces('🎌🗼🎊✨🍜🚃').map((e, i) => `<span style="--i:${i}">${e}</span>`).join('')}</div>
+    <div class="card hero celebrate">
+      <div class="hero-emoji big">🎌</div>
+      <h2>東京一日通關！</h2>
+      <p class="muted">從落地到 check-in，${T.flat.length} 個關卡你都開口了。<br>平均自評 <b>${avg}</b> / 5。</p>
+      <button class="btn primary big" data-act="tokyoDone">收下這面旗子</button>
+    </div>`;
+  }
+  const cur = T.flat[T.i];
+  const station = TOKYO_DAY.stations[cur.st];
+  const step = cur.step;
+  const head = cur.first ? `<div class="station"><span class="big-emoji">${station.emoji}</span>
+    <div><b>${esc(station.place)}</b><div class="muted small">${esc(station.narration)}</div></div></div>` : '';
+  const npc = step.npc ? `<div class="npc"><div class="npc-avatar">🧑</div>
+    <div class="bubble"><div class="bubble-jp">${esc(step.npc.jp)}</div>
+    <div class="bubble-kana">${esc(step.npc.kana)}</div>
+    <div class="bubble-zh">${esc(step.npc.zh)}</div></div></div>` : '';
+  const ans = T.revealed ? `
+    <div class="card answer-card">
+      <div class="muted small">參考答案</div>
+      <div class="jp-big">${esc(step.answer.jp)}</div>
+      <div class="kana">${esc(step.answer.kana)}</div>
+      ${S.settings.romaji ? `<div class="romaji">${esc(step.answer.romaji)}</div>` : ''}
+    </div>${gradeButtons('tokyoGrade')}`
+    : `<button class="btn primary big" data-act="tokyoReveal">看參考答案</button>`;
+  return `
+  <div class="topbar"><button class="icon-btn" data-act="go-home">✕</button>
+    <div class="brand">🗼 一日東京</div><div class="counter">${T.i + 1}/${T.flat.length}</div></div>
+  <div class="progress slim"><div class="progress-fill" style="width:${(T.i / T.flat.length * 100).toFixed(1)}%"></div></div>
+  ${head}${npc}
+  <div class="card prompt-card">
+    <div class="muted small">換你開口</div>
+    <div class="prompt">${esc(step.prompt)}</div>
+    ${recorderUI()}
+  </div>
+  ${ans}`;
+}
+
+/* ---------------------------- 卡片庫 ---------------------------- */
+let browseFilter = 'all';
+function viewBrowse() {
+  const chips = [['all', '全部'], ['star', '★ 高頻']].concat(
+    Object.keys(SCENARIOS).map(k => [k, SCENARIOS[k].emoji + ' ' + SCENARIOS[k].name]));
+  let list = CARDS;
+  if (browseFilter === 'star') list = CARDS.filter(c => c.star);
+  else if (browseFilter !== 'all') list = CARDS.filter(c => c.scenario === browseFilter);
+
+  const rows = list.map(c => {
+    const lv = cardLevel(c);
+    const dot = lv === 'strong' ? 'green' : lv === 'weak' ? 'yellow' : 'gray';
+    const st = S.cards[c.id];
+    let meta = '未學';
+    if (st && st.status === 'known') meta = '已會';
+    else if (st && st.status === 'learning' && st.dueDate) {
+      const d = Math.max(0, Math.ceil((st.dueDate - startOfToday()) / DAY_MS));
+      meta = d <= 0 ? '今天' : d + ' 天後';
+    } else if (st && st.diagRusty) meta = '待排入';
+    return `<div class="browse-row">
+      <i class="dot ${dot}"></i>
+      <div class="br-main"><div class="br-jp">${c.star ? '★ ' : ''}${esc(c.jp)}</div>
+      <div class="br-kana">${esc(c.kana)}${S.settings.romaji ? ' ・ ' + esc(c.romaji) : ''}</div>
+      <div class="br-zh">${esc(c.zh)}</div></div>
+      <div class="br-meta">${meta}</div>
+    </div>`;
+  }).join('');
+
+  return `<div class="topbar"><button class="icon-btn" data-act="go-home">←</button>
+    <div class="brand">📚 卡片庫（${list.length}）</div><div class="counter"></div></div>
+  <div class="chips">${chips.map(c => `<button class="chip ${browseFilter === c[0] ? 'on' : ''}" data-act="filter" data-k="${c[0]}">${c[1]}</button>`).join('')}</div>
+  <div class="card list">${rows}</div><div class="pad"></div>`;
+}
+
+/* ---------------------------- 備份 ---------------------------- */
+function viewBackup() {
+  const diagnosed = CARDS.filter(c => { const st = S.cards[c.id]; return st && (st.status !== 'new' || st.diagRusty); }).length;
+  const inSrs = CARDS.filter(c => S.cards[c.id] && S.cards[c.id].status === 'learning').length;
+  const waiting = CARDS.filter(c => { const st = S.cards[c.id]; return st && st.status === 'new' && st.diagRusty; }).length;
+  return `<div class="topbar"><button class="icon-btn" data-act="go-home">←</button>
+    <div class="brand">⚙️ 設定與備份</div><div class="counter"></div></div>
+  <div class="card">
+    <h3>進度概況</h3>
+    <div class="kv"><span>開始日期</span><b>${S.startDay}</b></div>
+    <div class="kv"><span>虛擬進度</span><b>Day ${curriculumDay()} ・ ${currentPhase().name}</b></div>
+    <div class="kv"><span>已診斷卡片</span><b>${diagnosed} / ${CARDS.length}</b></div>
+    <div class="kv"><span>已排入複習</span><b>${inSrs} 張</b></div>
+    <div class="kv"><span>等待釋出</span><b>${waiting} 張</b></div>
+    <div class="kv"><span>連續天數</span><b>${S.streak.count}（最佳 ${S.streak.best || 0}）</b></div>
+    <div class="kv"><span>本月補簽卡</span><b>${S.streak.freezes} / 2</b></div>
+  </div>
+  <div class="card">
+    <h3>顯示</h3>
+    <label class="switch"><input type="checkbox" id="romaji-toggle" ${S.settings.romaji ? 'checked' : ''}> 顯示羅馬字</label>
+    <div class="kv"><span>每日新卡量</span>
+      <select id="newperday" class="select">
+        ${[4, 6, 8, 10, 12].map(n => `<option value="${n}" ${S.settings.newPerDay === n ? 'selected' : ''}>${n} 張</option>`).join('')}
+      </select></div>
+  </div>
+  <div class="card">
+    <h3>備份 / 還原</h3>
+    <p class="muted small">所有進度只存在這台裝置的瀏覽器裡。換手機、清快取前，記得先匯出。</p>
+    <button class="btn primary" data-act="export">⬇️ 匯出 JSON 備份</button>
+    <button class="btn ghost" data-act="importClick">⬆️ 匯入備份檔</button>
+    <input type="file" id="import-file" accept="application/json,.json" hidden>
+  </div>
+  <div class="card danger">
+    <h3>重來一次</h3>
+    <p class="muted small">清除全部進度，回到診斷模式。無法復原。</p>
+    <button class="btn warn" data-act="reset">🗑 清除所有進度</button>
+  </div><div class="pad"></div>`;
+}
+
+function exportJSON() {
+  const blob = new Blob([JSON.stringify(S, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = '東京日語衝刺-備份-' + dayKey() + '.json';
+  document.body.appendChild(a); a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+  toast('已匯出備份檔 💾');
+}
+function importJSON(file) {
+  const fr = new FileReader();
+  fr.onload = () => {
+    try {
+      const obj = JSON.parse(fr.result);
+      if (!obj || typeof obj !== 'object' || !('cards' in obj)) throw new Error('格式不符');
+      S = Object.assign(defaultState(), obj);
+      save(); toast('備份已還原 ✅'); go('home');
+    } catch (e) { toast('❌ 匯入失敗：' + e.message); }
+  };
+  fr.readAsText(file);
+}
+
+/* ---------------------------- 錄音（自我對照用） ---------------------------- */
+let REC = { mr: null, chunks: [], url: null, on: false };
+function recSupported() {
+  return typeof MediaRecorder !== 'undefined' && navigator.mediaDevices && navigator.mediaDevices.getUserMedia;
+}
+function recorderUI() {
+  if (!recSupported()) return '';
+  return `<div class="rec">
+    <button class="btn rec-btn ${REC.on ? 'recording' : ''}" data-act="rec">${REC.on ? '⏹ 停止錄音' : '🎙️ 錄下自己'}</button>
+    ${REC.url ? `<audio class="audio" controls src="${REC.url}"></audio>` : ''}
+  </div>`;
+}
+async function toggleRec() {
+  if (REC.on) {
+    REC.mr && REC.mr.state !== 'inactive' && REC.mr.stop();
+    return;
+  }
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    REC.chunks = [];
+    const mr = new MediaRecorder(stream);
+    mr.ondataavailable = e => e.data.size && REC.chunks.push(e.data);
+    mr.onstop = () => {
+      stream.getTracks().forEach(t => t.stop());
+      if (REC.url) URL.revokeObjectURL(REC.url);
+      REC.url = URL.createObjectURL(new Blob(REC.chunks, { type: mr.mimeType || 'audio/webm' }));
+      REC.on = false; REC.mr = null; render();
+    };
+    REC.mr = mr; REC.on = true;
+    mr.start(); render();
+  } catch (e) { toast('無法使用麥克風（可能未授權）'); }
+}
+function clearRec() {
+  if (REC.on && REC.mr && REC.mr.state !== 'inactive') REC.mr.stop();
+  if (REC.url) { URL.revokeObjectURL(REC.url); REC.url = null; }
+  REC.on = false;
+}
+
+/* ==========================================================================
+   事件
+   ========================================================================== */
+const ACTIONS = {
+  'go-home': () => { clearRec(); go('home'); },
+  'go-browse': () => go('browse'),
+  'go-backup': () => go('backup'),
+  'filter': (el) => { browseFilter = el.dataset.k; render(); },
+  'freeze': useFreeze,
+
+  'startDiag': startDiag,
+  'diagKnown': () => diagAnswer(true),
+  'diagRusty': () => diagAnswer(false),
+  'finishDiag': () => { bumpStreak(); save(); go('home'); },
+  'finishDiagSession': () => go('home'),
+  'contDiag': () => { D.limit += 50; render(); },
+
+  'startLesson': startLesson,
+  'quitLesson': () => { clearRec(); if (confirm('離開今日課程？已完成的部分會保留。')) go('home'); },
+  'nextStage': nextStage,
+
+  'warmupPick': (el) => {
+    if (L.picked) return;
+    const q = L.warmup[L.idx];
+    L.picked = el.dataset.id;
+    L.stats.warmupTotal++;
+    if (L.picked === q.card.id) L.stats.warmupRight++;
+    render();
+  },
+  'warmupNext': () => { L.idx++; L.picked = null; render(); },
+
+  'flip': () => { if (!L.flipped) { L.flipped = true; render(); } },
+  'srsGrade': (el) => {
+    const q = +el.dataset.q;
+    const item = L.srs[L.idx];
+    const st = cs(item.id);
+    if (st.status === 'known' && q >= 3) {
+      st.lastReviewed = Date.now();            // 抽查通過 → 維持 known，不進 SRS
+    } else {
+      schedule(st, q);                          // 抽查失手 → 轉入 SRS
+    }
+    L.stats.srsDone++;
+    dayRec(dayKey()).reviewed++;
+    L.idx++; L.flipped = false;
+    save(); render();
+  },
+
+  'reveal': () => { L.revealed = true; render(); },
+  'dialogGrade': (el) => {
+    const q = +el.dataset.q;
+    const step = L.dialog.steps[L.idx];
+    linkedCards(step.answer.jp).forEach(c => {
+      const st = cs(c.id);
+      if (st.status === 'known' && q >= 3) return;
+      schedule(st, q);
+      dayRec(dayKey()).reviewed++;
+    });
+    L.stats.dialogDone++;
+    L.idx++; L.revealed = false; clearRec();
+    save(); render();
+  },
+
+  'kanjiPick': (el) => {
+    if (L.picked) return;
+    const q = L.kanji[L.idx];
+    L.picked = el.dataset.id;
+    L.stats.kanjiTotal++;
+    const rec = dayRec(dayKey());
+    rec.kanjiTotal++;
+    if (L.picked === q.card.id) { L.stats.kanjiRight++; rec.kanjiRight++; }
+    else { schedule(cs(q.card.id), 0); }        // 答錯 → 自動加入 SRS，明天再見
+    save(); render();
+  },
+  'kanjiNext': () => { L.idx++; L.picked = null; render(); },
+
+  'saveReflect': (el) => {
+    const input = $('#reflect-input');
+    const rec = dayRec(dayKey());
+    if (!el.dataset.skip && input && input.value.trim()) {
+      rec.reflection = input.value.trim();
+      S.reflections.push({ day: dayKey(), text: rec.reflection });
+    }
+    nextStage();
+  },
+
+  'startTokyo': startTokyo,
+  'tokyoReveal': () => { T.revealed = true; render(); },
+  'tokyoGrade': (el) => {
+    const q = +el.dataset.q;
+    const step = T.flat[T.i].step;
+    T.scores.push(q);
+    linkedCards(step.answer.jp).forEach(c => {
+      const st = cs(c.id);
+      if (st.status === 'known' && q >= 3) return;
+      schedule(st, q);
+    });
+    T.i++; T.revealed = false; clearRec();
+    save(); render();
+  },
+  'tokyoDone': () => {
+    S.tokyo.runs.push({ day: dayKey(), scores: T.scores });
+    save(); clearRec(); go('home');
+  },
+
+  'export': exportJSON,
+  'importClick': () => $('#import-file').click(),
+  'reset': () => {
+    if (!confirm('確定清除所有進度？此動作無法復原。')) return;
+    if (!confirm('再確認一次：全部歸零，回到診斷模式。')) return;
+    localStorage.removeItem(STORE_KEY);
+    S = defaultState(); save(); go('home');
+  },
+  'rec': toggleRec
+};
+
+document.addEventListener('click', e => {
+  const el = e.target.closest('[data-act]');
+  if (!el) return;
+  const fn = ACTIONS[el.dataset.act];
+  if (fn) { e.preventDefault(); fn(el); }
+});
+
+function afterRender() {
+  const f = $('#import-file');
+  if (f) f.onchange = () => { if (f.files[0]) importJSON(f.files[0]); };
+  const rt = $('#romaji-toggle');
+  if (rt) rt.onchange = () => { S.settings.romaji = rt.checked; save(); toast('已更新'); };
+  const np = $('#newperday');
+  if (np) np.onchange = () => { S.settings.newPerDay = +np.value; save(); toast('每日新卡：' + np.value + ' 張'); };
+  const ri = $('#reflect-input');
+  if (ri) ri.addEventListener('keydown', e => { if (e.key === 'Enter') ACTIONS.saveReflect($('[data-act="saveReflect"]')); });
+}
+
+/* ---------------------------- 啟動 ---------------------------- */
+load();
+refreshFreezeMonth();
+checkStreakBroken();
+save();
+render();
+
+</script>
+</body>
+</html>
