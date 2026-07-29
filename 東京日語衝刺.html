@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#FFE9D6">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="東京日語">
 <title>東京日語衝刺 🏮</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏮</text></svg>">
@@ -100,8 +101,6 @@ p{margin:6px 0}
 .btn.ghost{background:transparent;color:var(--muted);box-shadow:none;font-weight:600}
 .btn.warn{background:rgba(229,72,77,.1);color:var(--red)}
 .btn.small{width:auto;padding:9px 14px;font-size:14px;margin:0;flex:none}
-.btn.known{background:linear-gradient(135deg,var(--green),#4CC38A);color:#fff}
-.btn.rusty{background:linear-gradient(135deg,var(--yellow),#F7B955);color:#fff}
 
 /* ---------- 首頁 ---------- */
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
@@ -159,14 +158,23 @@ p{margin:6px 0}
 .seg.cur{opacity:1;background:#fff;box-shadow:var(--shadow);transform:scale(1.04)}
 .counter-line{text-align:center;color:var(--muted);font-size:13px;margin-bottom:10px;font-variant-numeric:tabular-nums}
 
-/* ---------- 診斷 ---------- */
-.diag-card{text-align:center;padding:34px 22px}
-.diag-q{font-size:26px;font-weight:700;margin:14px 0 10px;line-height:1.45}
-.diag-btns{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
-.diag-btns .btn{margin-top:0;padding:20px 10px;font-size:16px}
 .badge{
   display:inline-block;padding:4px 12px;border-radius:99px;font-size:12.5px;font-weight:700;
 }
+
+/* ---------- 今日盤點三選一 ---------- */
+.triage-btns{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:4px 0 10px}
+.triage{
+  border:none;border-radius:16px;padding:14px 4px;min-height:88px;cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
+  font-family:inherit;color:#fff;transition:transform .08s;
+}
+.triage:active{transform:scale(.95)}
+.triage .t-emoji{font-size:22px;line-height:1}
+.triage b{font-size:12.5px;font-weight:700;letter-spacing:-.3px;line-height:1.3}
+.t-known{background:linear-gradient(135deg,var(--green),#4CC38A)}
+.t-quick{background:linear-gradient(135deg,var(--yellow),#F7B955)}
+.t-cold{background:linear-gradient(135deg,#F2743A,#E5684D)}
 
 /* ---------- 翻卡 ---------- */
 .flip{perspective:1200px;min-height:300px;margin-bottom:14px;cursor:pointer}
@@ -256,9 +264,9 @@ p{margin:6px 0}
 
 /* ---------- 完成慶祝 ---------- */
 .celebrate{background:linear-gradient(160deg,#FFFDF6,#FFF0DE)}
-.recap{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:18px 0}
+.recap{display:grid;grid-template-columns:repeat(auto-fit,minmax(64px,1fr));gap:8px;margin:18px 0}
 .recap div{display:flex;flex-direction:column;gap:2px}
-.recap b{font-size:23px}
+.recap b{font-size:22px}
 .recap span{font-size:12px;color:var(--muted)}
 .streak-line{font-size:15px;margin:6px 0}
 .quote{margin-top:14px;font-size:14.5px;color:#5F594F;font-style:italic;background:rgba(0,0,0,.035);padding:12px;border-radius:12px}
@@ -303,6 +311,24 @@ p{margin:6px 0}
   font-family:inherit;margin:12px 0 4px;background:#fff;color:var(--text);
 }
 .input:focus{outline:none;border-color:var(--primary)}
+code{
+  background:rgba(0,0,0,.05);padding:1px 6px;border-radius:6px;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.9em;
+}
+
+/* ---------- 同步碼 ---------- */
+.synccode{
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:21px;font-weight:700;letter-spacing:1.5px;text-align:center;
+  background:linear-gradient(160deg,#F7F2FF,#EAF4F9);
+  border:1px dashed rgba(46,134,171,.4);border-radius:14px;
+  padding:16px 10px;margin:12px 0 6px;cursor:pointer;user-select:all;
+  word-break:break-all;
+}
+.synccode:active{transform:scale(.99)}
+.sync-link{margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}
+.sync-link .input{margin:0 0 8px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:1px}
+.sync-link .btn{margin-top:0}
 
 /* ---------- toast ---------- */
 #toast{
@@ -324,6 +350,27 @@ p{margin:6px 0}
 <body>
 <div id="app"></div>
 <div id="toast"></div>
+<script>
+/* ==========================================================================
+   跨裝置同步設定（選填）
+   --------------------------------------------------------------------------
+   留空時 App 一切正常，只是沒有跨裝置同步 —— 進度仍然存在這台裝置的
+   localStorage 裡，也仍然可以用「匯出 / 匯入 JSON」搬家。
+
+   要啟用同步：
+     1. 到 https://supabase.com 開一個免費專案
+     2. SQL Editor → 貼上 supabase-setup.sql 並執行
+     3. Settings → API → 把 Project URL 和 anon / public key 填到下面
+
+   ⚠️ 這裡只能放 anon / public key —— 它設計上就是要公開的，配合資料表的
+      RLS（表本身完全鎖死，外界只能透過 pull / push 兩支函式存取）。
+      千萬不要貼 service_role key，那把鑰匙會繞過所有權限。
+   ========================================================================== */
+
+const SUPABASE_URL = '';       // 例：https://abcdefghijklmnop.supabase.co
+const SUPABASE_ANON_KEY = '';  // 例：eyJhbGciOiJIUzI1NiIsInR5cCI6...
+
+</script>
 <script>
 /* ==========================================================================
    東京旅遊日語 30 天衝刺 — 內容資料庫
@@ -837,6 +884,177 @@ const REFLECTION_PROMPTS = [
 </script>
 <script>
 /* ==========================================================================
+   跨裝置同步（同步碼，無帳號）
+
+   設計前提：localStorage 永遠是唯一的真實來源，雲端只是同步層。
+   沒網路、沒設定同步碼時，App 的行為跟完全沒有這個檔案一模一樣 ——
+   人在東京、地下街收不到訊號的時候，學習流程一秒都不能被擋住。
+   ========================================================================== */
+
+/* 去掉容易看錯的 0 O 1 I l */
+const SYNC_ALPHABET = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
+const SYNC_CODE_LEN = 12;
+
+function syncConfigured() {
+  return typeof SUPABASE_URL === 'string' && SUPABASE_URL.length > 0
+      && typeof SUPABASE_ANON_KEY === 'string' && SUPABASE_ANON_KEY.length > 0;
+}
+function syncEnabled() {
+  return syncConfigured() && S.sync && S.sync.code;
+}
+
+function newSyncCode() {
+  const bytes = new Uint8Array(SYNC_CODE_LEN);
+  crypto.getRandomValues(bytes);
+  let out = '';
+  for (let i = 0; i < bytes.length; i++) out += SYNC_ALPHABET[bytes[i] % SYNC_ALPHABET.length];
+  return out;
+}
+function prettyCode(code) {
+  return code ? code.replace(/(.{4})(?=.)/g, '$1-') : '';
+}
+function normalizeCode(s) {
+  return (s || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+}
+
+async function rpc(fn, body) {
+  const res = await fetch(SUPABASE_URL.replace(/\/+$/, '') + '/rest/v1/rpc/' + fn, {
+    method: 'POST',
+    headers: {
+      'apikey': SUPABASE_ANON_KEY,
+      'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(body)
+  });
+  if (!res.ok) throw new Error('伺服器回應 ' + res.status);
+  const text = await res.text();
+  return text ? JSON.parse(text) : null;
+}
+
+/* --------------------------------------------------------------------------
+   合併：兩台裝置各練各的也不能弄丟任何一邊的紀錄
+   -------------------------------------------------------------------------- */
+function mergeState(local, remote) {
+  if (!remote || typeof remote !== 'object' || !remote.cards) return local;
+  const out = JSON.parse(JSON.stringify(local));
+
+  // 卡片：逐張取「最近複習過」的那份；盤點結果只要有一邊做過就算數
+  Object.keys(remote.cards).forEach(id => {
+    const r = remote.cards[id];
+    const l = out.cards[id];
+    if (!l) { out.cards[id] = r; return; }
+    if ((r.lastReviewed || 0) > (l.lastReviewed || 0)) out.cards[id] = r;
+    const merged = out.cards[id];
+    if ((r.triaged || l.triaged) && !merged.triaged) {
+      merged.triaged = true;
+      merged.seed = merged.seed || r.seed || l.seed || null;
+    }
+  });
+
+  // 每日紀錄：以日期聯集，同一天以本機為準
+  Object.keys(remote.days || {}).forEach(k => { if (!out.days[k]) out.days[k] = remote.days[k]; });
+
+  // streak：採用 lastDay 較晚的那份，best 取大、補簽卡取小（保守）
+  const rs = remote.streak, ls = out.streak;
+  if (rs) {
+    const takeRemote = rs.lastDay && (!ls.lastDay || rs.lastDay > ls.lastDay);
+    out.streak = Object.assign({}, takeRemote ? rs : ls);
+    out.streak.best = Math.max(ls.best || 0, rs.best || 0);
+    out.streak.freezes = Math.min(
+      typeof ls.freezes === 'number' ? ls.freezes : 2,
+      typeof rs.freezes === 'number' ? rs.freezes : 2
+    );
+  }
+
+  // 反思：以日期去重聯集
+  const seenDay = {};
+  out.reflections.forEach(r => { seenDay[r.day] = true; });
+  (remote.reflections || []).forEach(r => {
+    if (!seenDay[r.day]) { out.reflections.push(r); seenDay[r.day] = true; }
+  });
+  out.reflections.sort((a, b) => (a.day < b.day ? -1 : 1));
+
+  // 一日東京通關紀錄：以日期＋分數去重
+  const runs = {};
+  (out.tokyo.runs || []).concat(((remote.tokyo || {}).runs) || [])
+    .forEach(r => { runs[r.day + '|' + JSON.stringify(r.scores)] = r; });
+  out.tokyo.runs = Object.keys(runs).map(k => runs[k]);
+
+  // 盤點統計直接從卡片重算，避免兩邊相加變成重複計數
+  const t = { known: 0, quick: 0, cold: 0 };
+  Object.keys(out.cards).forEach(id => {
+    const st = out.cards[id];
+    if (!st.triaged) return;
+    if (st.status === 'known') t.known++;
+    else if (st.seed === 'quick') t.quick++;
+    else if (st.seed === 'cold') t.cold++;
+  });
+  out.triage = t;
+
+  // 課表進度以最早開始的那台為準
+  if (remote.startDay && remote.startDay < out.startDay) out.startDay = remote.startDay;
+
+  // out.sync 維持本機的（同步碼本身不從遠端覆蓋）
+  return out;
+}
+
+/* --------------------------------------------------------------------------
+   拉取 / 推送
+   -------------------------------------------------------------------------- */
+async function syncPull(codeOverride) {
+  if (!syncConfigured()) throw new Error('尚未設定雲端同步');
+  const code = normalizeCode(codeOverride || (S.sync && S.sync.code));
+  if (!code) throw new Error('沒有同步碼');
+  const remote = await rpc('pull', { p_code: code });
+  if (remote) S = mergeState(S, remote);
+  S.sync = S.sync || {};
+  S.sync.code = code;
+  S.sync.lastPull = Date.now();
+  save();
+  return !!remote;
+}
+
+async function syncPush() {
+  if (!syncEnabled()) return false;
+  await rpc('push', { p_code: S.sync.code, p_data: S });
+  S.sync.lastPush = Date.now();
+  save();
+  return true;
+}
+
+/* 開啟 App 時拉一次；失敗完全靜音，不干擾學習 */
+function syncOnOpen() {
+  if (!syncEnabled()) return;
+  syncPull().then(() => render()).catch(() => {});
+}
+
+/* 完成當日課程之後推一次，稍微延遲避免連續存檔一直打 */
+let syncTimer = null;
+function syncSoon() {
+  if (!syncEnabled()) return;
+  clearTimeout(syncTimer);
+  syncTimer = setTimeout(() => { syncPush().catch(() => {}); }, 1500);
+}
+
+/* 切到背景時（關 App、切換分頁）補推一次 */
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'hidden') syncPush().catch(() => {});
+});
+
+function agoText(ts) {
+  if (!ts) return '尚未同步';
+  const m = Math.floor((Date.now() - ts) / 60000);
+  if (m < 1) return '剛剛';
+  if (m < 60) return m + ' 分鐘前';
+  const h = Math.floor(m / 60);
+  if (h < 24) return h + ' 小時前';
+  return Math.floor(h / 24) + ' 天前';
+}
+
+</script>
+<script>
+/* ==========================================================================
    東京旅遊日語 30 天衝刺 — 應用邏輯
    ========================================================================== */
 
@@ -860,17 +1078,19 @@ function sample(a, n) { return shuffle(a).slice(0, n); }
 /* ---------------------------- 狀態 ---------------------------- */
 const STORE_KEY = 'jp-sprint-tokyo-v1';
 
+const STATE_VERSION = 2;
+
 function defaultState() {
   return {
-    version: 1,
+    version: STATE_VERSION,
     createdAt: Date.now(),
     startDay: dayKey(),
     cards: {},
-    diag: { done: false, cursor: 0, sessions: 0, lastDay: null, order: null, known: 0, rusty: 0 },
+    triage: { known: 0, quick: 0, cold: 0 },
     streak: { count: 0, best: 0, lastDay: null, freezes: 2, freezeMonth: monthKey(), frozen: [] },
     days: {},
     tokyo: { runs: [] },
-    settings: { newPerDay: 8, romaji: true },
+    settings: { newPerDay: 8, triagePerDay: 8, romaji: true },
     reflections: []
   };
 }
@@ -882,14 +1102,33 @@ function load() {
     const raw = localStorage.getItem(STORE_KEY);
     if (raw) {
       const parsed = JSON.parse(raw);
+      // 每個子物件都取一份全新的預設值 —— Object.assign 會就地改寫第一個參數，
+      // 共用同一份 defaultState() 會讓預設欄位被舊資料洗掉
       S = Object.assign(defaultState(), parsed);
       S.streak = Object.assign(defaultState().streak, parsed.streak || {});
-      S.diag = Object.assign(defaultState().diag, parsed.diag || {});
       S.settings = Object.assign(defaultState().settings, parsed.settings || {});
       S.tokyo = Object.assign(defaultState().tokyo, parsed.tokyo || {});
+      S.triage = Object.assign(defaultState().triage, parsed.triage || {});
+      migrate();
     }
   } catch (e) { console.warn('讀取進度失敗，改用全新狀態', e); }
   return S;
+}
+
+/* v1 → v2：三天前置診斷改成每日盤點，diagRusty 併入 triaged / seed */
+function migrate() {
+  if ((S.version || 1) >= 2) return;
+  const t = { known: 0, quick: 0, cold: 0 };
+  Object.keys(S.cards).forEach(id => {
+    const st = S.cards[id];
+    if (st.status === 'known') { st.triaged = true; st.seed = null; t.known++; }
+    else if (st.diagRusty || st.status === 'learning') { st.triaged = true; st.seed = 'cold'; t.cold++; }
+    delete st.diagRusty;
+  });
+  S.triage = t;
+  delete S.diag;
+  S.version = STATE_VERSION;
+  save();
 }
 function save() {
   try { localStorage.setItem(STORE_KEY, JSON.stringify(S)); }
@@ -897,11 +1136,18 @@ function save() {
 }
 
 function cs(id) {
-  if (!S.cards[id]) S.cards[id] = { interval: 0, repetitions: 0, easeFactor: 2.5, dueDate: null, status: 'new', lastReviewed: null, lapses: 0 };
+  if (!S.cards[id]) S.cards[id] = {
+    interval: 0, repetitions: 0, easeFactor: 2.5, dueDate: null,
+    status: 'new', lastReviewed: null, lapses: 0,
+    triaged: false, seed: null   // seed: 'quick'（想一下才想到）| 'cold'（說不出來）
+  };
   return S.cards[id];
 }
 function dayRec(k) {
-  if (!S.days[k]) S.days[k] = { stages: {}, done: false, reviewed: 0, introduced: 0, kanjiRight: 0, kanjiTotal: 0, reflection: '', dialogId: null };
+  if (!S.days[k]) S.days[k] = {
+    stages: {}, stageCount: 0, done: false, reviewed: 0, introduced: 0,
+    triaged: 0, kanjiRight: 0, kanjiTotal: 0, reflection: '', dialogId: null
+  };
   return S.days[k];
 }
 
@@ -939,11 +1185,11 @@ function dueCardIds() {
 
 /* ---------------------------- 30 天課表 ---------------------------- */
 const ALL_POOLS = ['basics', 'repair', 'restaurant', 'shopping', 'transport', 'hotel', 'kanji'];
+/* 盤點已拆進每日課程，不再佔用前三天，各區塊因此各拉長為一週 */
 const PHASES = [
-  { key: 'diag', name: '診斷重啟', from: 1, to: 3, pools: [], desc: '全卡診斷分流' },
-  { key: 'A', name: '區塊 A', from: 4, to: 9, pools: ['basics', 'repair', 'restaurant'], desc: '問候／數字／時間 ＋ 餐廳' },
-  { key: 'B', name: '區塊 B', from: 10, to: 15, pools: ['shopping', 'transport'], desc: '購物 ＋ 交通問路' },
-  { key: 'C', name: '區塊 C', from: 16, to: 21, pools: ['hotel', 'kanji'], desc: '飯店 ＋ 招牌漢字閱讀' },
+  { key: 'A', name: '區塊 A', from: 1, to: 7, pools: ['basics', 'repair', 'restaurant'], desc: '問候／數字／時間 ＋ 餐廳' },
+  { key: 'B', name: '區塊 B', from: 8, to: 14, pools: ['shopping', 'transport'], desc: '購物 ＋ 交通問路' },
+  { key: 'C', name: '區塊 C', from: 15, to: 21, pools: ['hotel', 'kanji'], desc: '飯店 ＋ 招牌漢字閱讀' },
   { key: 'MIX', name: '交錯模擬', from: 22, to: 27, pools: ALL_POOLS, desc: '「一日東京」串場模擬' },
   { key: 'FINE', name: '高頻精煉', from: 28, to: 30, pools: ALL_POOLS, starOnly: true, desc: '只練高頻句 ＋ 修復策略' }
 ];
@@ -955,18 +1201,12 @@ function virtualDay() {
   const p = Math.min(1, elapsed / total);
   return Math.min(30, Math.max(1, Math.floor(p * 29) + 1));
 }
-/* 診斷做完就進正課，就算日曆上還在 Day 1–3 也一樣 */
-function curriculumDay() {
-  const d = virtualDay();
-  return S.diag.done ? Math.max(4, d) : d;
-}
 function currentPhase() {
-  if (!S.diag.done) return PHASES[0];
-  const d = curriculumDay();
+  const d = virtualDay();
   return PHASES.find(p => d >= p.from && d <= p.to) || PHASES[PHASES.length - 1];
 }
 function tokyoUnlocked() {
-  return S.diag.done && (curriculumDay() >= 22 || daysLeft() <= 6);
+  return virtualDay() >= 22 || daysLeft() <= 6;
 }
 
 /* ---------------------------- 掌握度 ---------------------------- */
@@ -975,7 +1215,7 @@ function cardLevel(c) {
   if (!st) return 'new';
   if (st.status === 'known') return 'strong';
   if (st.repetitions >= 2 && st.interval >= 3) return 'strong';
-  if (st.status === 'learning' || st.diagRusty) return 'weak';
+  if (st.status === 'learning' || st.triaged) return 'weak';
   return 'new';
 }
 function groupStats(group) {
@@ -1035,18 +1275,30 @@ function poolCards(phase) {
   return list;
 }
 
-function newCardsToday(phase, dueCount) {
+/* 當前階段卡池裡還沒盤點過的卡 */
+function untriagedInPool(phase) {
+  return poolCards(phase).filter(c => { const st = S.cards[c.id]; return !st || !st.triaged; });
+}
+
+/* 今日盤點清單：只抽今天主題的卡，高頻優先 */
+function buildTriage(phase) {
+  const pool = shuffle(untriagedInPool(phase)).sort((a, b) => (b.star ? 1 : 0) - (a.star ? 1 : 0));
+  return pool.slice(0, S.settings.triagePerDay).map(c => c.id);
+}
+
+function newCardsToday(phase, dueCount, exclude) {
   const rec = dayRec(dayKey());
   const limit = (dueCount > 25 ? 4 : S.settings.newPerDay) - rec.introduced;
   if (limit <= 0) return [];
+  const skip = exclude || [];
   const pool = poolCards(phase).filter(c => {
     const st = S.cards[c.id];
-    return !st || st.status === 'new';
+    return (!st || st.status === 'new') && skip.indexOf(c.id) < 0;
   });
-  // 診斷標為「生疏」的優先，其次高頻卡
+  // 已盤點的優先（使用者確認過不會），其次高頻卡
   const rank = c => {
     const st = S.cards[c.id];
-    return (st && st.diagRusty ? 0 : 2) + (c.star ? 0 : 1);
+    return (st && st.triaged ? 0 : 2) + (c.star ? 0 : 1);
   };
   pool.sort((a, b) => rank(a) - rank(b));
   return pool.slice(0, limit);
@@ -1074,10 +1326,16 @@ function buildWarmup() {
   });
 }
 
-function buildSrsQueue(phase) {
+function buildSrsQueue(phase, excludeIds) {
   const due = dueCardIds();
-  const newOnes = newCardsToday(phase, due.length).map(c => c.id);
-  newOnes.forEach(id => { const st = cs(id); st.status = 'learning'; st.dueDate = Date.now(); });
+  const newOnes = newCardsToday(phase, due.length, excludeIds).map(c => c.id);
+  newOnes.forEach(id => {
+    const st = cs(id);
+    st.status = 'learning';
+    st.dueDate = Date.now();
+    // 盤點時選「想一下才想到」→ 跳過最初一輪，第一次答對就直接排到 3 天後
+    if (st.seed === 'quick' && st.repetitions === 0) st.repetitions = 1;
+  });
   if (newOnes.length) { dayRec(dayKey()).introduced += newOnes.length; save(); }
 
   let queue = shuffle(due).concat(newOnes);
@@ -1093,7 +1351,7 @@ function buildSrsQueue(phase) {
 function pickDialogue(phase) {
   let pool = DIALOGUES.filter(d => phase.pools.indexOf(d.scenario) >= 0);
   if (!pool.length) pool = DIALOGUES;
-  return pool[curriculumDay() % pool.length];
+  return pool[virtualDay() % pool.length];
 }
 
 function buildKanjiQuiz(phase) {
@@ -1122,7 +1380,6 @@ function linkedCards(jp) {
 let route = 'home';
 let L = null;   // 每日課程 session
 let T = null;   // 一日東京 session
-let D = null;   // 診斷 session
 
 const app = () => $('#app');
 
@@ -1139,7 +1396,6 @@ function render() {
   el.scrollTop = 0;
   window.scrollTo(0, 0);
   if (route === 'home') el.innerHTML = viewHome();
-  else if (route === 'diag') el.innerHTML = viewDiag();
   else if (route === 'lesson') el.innerHTML = viewLesson();
   else if (route === 'tokyo') el.innerHTML = viewTokyo();
   else if (route === 'browse') el.innerHTML = viewBrowse();
@@ -1165,11 +1421,12 @@ function viewHome() {
   checkStreakBroken();
   const dl = daysLeft();
   const phase = currentPhase();
-  const vd = curriculumDay();
+  const vd = virtualDay();
   const rec = dayRec(dayKey());
   const due = dueCardIds().length;
+  const toTriage = untriagedInPool(phase).length;
   const doneToday = rec.done;
-  const totalTasks = 5;
+  const totalTasks = rec.stageCount || 5;
   const doneStages = Object.keys(rec.stages).filter(k => rec.stages[k]).length;
 
   let banner = '';
@@ -1178,27 +1435,6 @@ function viewHome() {
       <div>🧊 昨天沒練到。這個月還有 <b>${S.streak.freezes}</b> 張補簽卡，要用一張保住 ${S.streak.count} 天連續紀錄嗎？</div>
       <button class="btn small" data-act="freeze">用補簽卡</button>
     </div>`;
-  }
-
-  if (!S.diag.done) {
-    const total = CARDS.length;
-    const doneN = S.diag.cursor;
-    return `
-    ${header()}
-    <div class="countdown">
-      <div class="cd-label">距離東京</div>
-      <div class="cd-num">${dl}</div>
-      <div class="cd-label">天 ・ 2026 / 08 / 27 🛫</div>
-    </div>
-    <div class="card hero">
-      <div class="hero-emoji">🧭</div>
-      <h2>先做一次診斷</h2>
-      <p class="muted">你不是從零開始 —— 先快速掃過全部 ${total} 張卡，把「已經會的」挑掉，剩下的才進入複習排程。分 3 天完成，每天最多 50 張。</p>
-      <div class="progress"><div class="progress-fill" style="width:${(doneN / total * 100).toFixed(1)}%"></div></div>
-      <div class="muted small">已分流 ${doneN} / ${total} 張 ・ 已完成 ${S.diag.sessions} / 3 次</div>
-      <button class="btn primary big" data-act="startDiag">${doneN ? '繼續診斷' : '開始診斷'}</button>
-    </div>
-    ${footerNav()}`;
   }
 
   const groups = SCENARIO_GROUPS.map(g => {
@@ -1240,6 +1476,7 @@ function viewHome() {
     <div class="phase-tag">Day ${vd} ・ ${phase.name}</div>
     <div class="muted small">${phase.desc}</div>
     <div class="due-line">今日到期 <b>${due}</b> 張${due > 25 ? '<span class="warn"> ・ 卡量偏多，今天新卡自動降為 4 張</span>' : ''}</div>
+    ${toTriage ? `<div class="muted small">📋 這個主題還有 <b>${toTriage}</b> 張沒盤點過，今天會先確認 ${Math.min(toTriage, S.settings.triagePerDay)} 張</div>` : ''}
     <button class="btn primary big" data-act="startLesson">${doneToday ? '🔁 再練一次' : '▶︎ 開始今日 30 分鐘'}</button>
     ${doneToday ? '<div class="muted small center">今天已完成 ✨ 明天見！</div>' : ''}
   </div>
@@ -1277,129 +1514,131 @@ function footerNav() {
   </div><div class="pad"></div>`;
 }
 
-/* ---------------------------- 診斷模式 ---------------------------- */
-function startDiag() {
-  if (!S.diag.order) { S.diag.order = shuffle(CARDS.map(c => c.id)); save(); }
-  D = { count: 0, limit: 50 };
-  go('diag');
-}
-function viewDiag() {
-  const total = CARDS.length;
-  const i = S.diag.cursor;
-  if (i >= total) {
-    S.diag.done = true; save();
-    return celebrateBlock('🎉', '診斷完成！',
-      `你標記了 <b>${S.diag.known}</b> 張「已經會」、<b>${S.diag.rusty}</b> 張「生疏」。<br>
-       生疏的卡不會一次全丟給你 —— 會依 30 天課表分階段、每天約 ${S.settings.newPerDay} 張慢慢釋出。<br>
-       「已經會」的卡不進複習，但末期模擬會隨機抽查。`,
-      '進入每日課程', 'finishDiag');
-  }
-  if (D && D.count >= D.limit) {
-    return celebrateBlock('☕️', '今天的診斷完成了',
-      `已分流 ${i} / ${total} 張。<br>診斷刻意分 3 天做完 —— 一次掃太多，判斷會失準。`,
-      '回首頁', 'finishDiagSession', '不等了，繼續診斷', 'contDiag');
-  }
-  const c = CARD_BY_ID[S.diag.order[i]];
-  const sc = SCENARIOS[c.scenario];
-  return `
-  <div class="topbar"><button class="icon-btn" data-act="go-home">←</button>
-    <div class="brand">診斷分流</div><div class="counter">${i + 1} / ${total}</div></div>
-  <div class="progress slim"><div class="progress-fill" style="width:${((i) / total * 100).toFixed(1)}%"></div></div>
-  <div class="card diag-card">
-    <div class="badge" style="background:${sc.color}1a;color:${sc.color}">${sc.emoji} ${sc.name}</div>
-    <div class="diag-q">${esc(c.zh)}</div>
-    <div class="muted">心裡默唸一次日語 —— 說得出來嗎？</div>
-  </div>
-  <div class="diag-btns">
-    <button class="btn known" data-act="diagKnown">✅ 已經會了</button>
-    <button class="btn rusty" data-act="diagRusty">😅 生疏了</button>
-  </div>
-  <div class="muted small center">「已經會了」的卡不會進入每日複習，但末期模擬會隨機抽查。</div>`;
-}
-function diagAnswer(known) {
-  const id = S.diag.order[S.diag.cursor];
-  const st = cs(id);
-  if (known) {
-    st.status = 'known'; st.dueDate = null; st.diagRusty = false;
-    S.diag.known++;
-  } else {
-    // 生疏 → 納入 SRS 候補池，實際排入由 30 天課表按階段、每天 8 張釋出
-    st.status = 'new'; st.diagRusty = true; st.dueDate = null;
-    st.interval = 0; st.repetitions = 0;
-    S.diag.rusty++;
-  }
-  S.diag.cursor++;
-  D.count++;
-  if (D.count >= D.limit || S.diag.cursor >= CARDS.length) {
-    S.diag.sessions++;
-    S.diag.lastDay = dayKey();
-  }
-  save();
-  render();
-}
-
 /* ---------------------------- 每日課程 ---------------------------- */
-const STAGE_META = [
-  { key: 'warmup', name: '暖身', emoji: '☀️', mins: 3 },
-  { key: 'srs', name: '主複習', emoji: '🎴', mins: 8 },
-  { key: 'dialog', name: '情境對話', emoji: '🗣️', mins: 15 },
-  { key: 'kanji', name: '漢字快閃', emoji: '🈶', mins: 4 },
-  { key: 'reflect', name: '反思', emoji: '✍️', mins: 1 }
-];
+const STAGE_DEF = {
+  triage:  { name: '今日盤點', emoji: '📋', mins: 2 },
+  warmup:  { name: '暖身',     emoji: '☀️', mins: 3 },
+  srs:     { name: '主複習',   emoji: '🎴', mins: 8 },
+  dialog:  { name: '情境對話', emoji: '🗣️', mins: 13 },
+  kanji:   { name: '漢字快閃', emoji: '🈶', mins: 3 },
+  reflect: { name: '反思',     emoji: '✍️', mins: 1 }
+};
 
 function startLesson() {
   const phase = currentPhase();
   const due = dueCardIds();
+  const triage = buildTriage(phase);
+  const warmup = buildWarmup();
+  const srs = buildSrsQueue(phase, triage);   // 今天要盤點的卡不重複當新卡出現
+  const kanji = buildKanjiQuiz(phase);
+
+  // 只把有內容的關卡排進今天的流程
+  const stages = [];
+  if (triage.length) stages.push('triage');
+  if (warmup.length) stages.push('warmup');
+  if (srs.length) stages.push('srs');
+  stages.push('dialog');
+  if (kanji.length) stages.push('kanji');
+  stages.push('reflect');
+
   L = {
-    phase: phase,
+    phase: phase, stages: stages,
     stage: 0, idx: 0, flipped: false, picked: null, revealed: false,
-    warmup: buildWarmup(),
-    srs: buildSrsQueue(phase),
+    triage: triage, warmup: warmup, srs: srs, kanji: kanji,
     dialog: pickDialogue(phase),
-    kanji: buildKanjiQuiz(phase),
-    stats: { warmupRight: 0, warmupTotal: 0, srsDone: 0, kanjiRight: 0, kanjiTotal: 0, dialogDone: 0 },
-    overload: due.length > 25,
-    rec: null
+    stats: { warmupRight: 0, warmupTotal: 0, srsDone: 0, kanjiRight: 0, kanjiTotal: 0, dialogDone: 0, triaged: 0 },
+    overload: due.length > 25
   };
-  dayRec(dayKey()).dialogId = L.dialog.id;
+  const rec = dayRec(dayKey());
+  rec.dialogId = L.dialog.id;
+  rec.stageCount = stages.length;
   save();
   if (L.overload) toast('今天到期卡超過 25 張，新卡自動降為 4 張 👍');
   go('lesson');
 }
 
 function lessonBar() {
-  const segs = STAGE_META.map((s, i) => {
+  const cur = STAGE_DEF[L.stages[Math.min(L.stage, L.stages.length - 1)]];
+  const segs = L.stages.map((k, i) => {
     const cls = i < L.stage ? 'done' : i === L.stage ? 'cur' : '';
-    return `<div class="seg ${cls}" title="${s.name}"><span>${s.emoji}</span></div>`;
+    return `<div class="seg ${cls}" title="${STAGE_DEF[k].name}"><span>${STAGE_DEF[k].emoji}</span></div>`;
   }).join('');
   return `<div class="topbar"><button class="icon-btn" data-act="quitLesson">✕</button>
-    <div class="brand">${STAGE_META[Math.min(L.stage, 4)].emoji} ${STAGE_META[Math.min(L.stage, 4)].name}
-    <span class="muted xsmall">約 ${STAGE_META[Math.min(L.stage, 4)].mins} 分</span></div>
+    <div class="brand">${cur.emoji} ${cur.name}
+    <span class="muted xsmall">約 ${cur.mins} 分</span></div>
     <div class="counter"></div></div>
     <div class="segbar">${segs}</div>`;
 }
 
+const STAGE_VIEW = {
+  triage: () => stageTriage(), warmup: () => stageWarmup(), srs: () => stageSrs(),
+  dialog: () => stageDialog(), kanji: () => stageKanji(), reflect: () => stageReflect()
+};
+
 function viewLesson() {
   if (!L) { route = 'home'; return viewHome(); }
-  if (L.stage === 0) return lessonBar() + stageWarmup();
-  if (L.stage === 1) return lessonBar() + stageSrs();
-  if (L.stage === 2) return lessonBar() + stageDialog();
-  if (L.stage === 3) return lessonBar() + stageKanji();
-  if (L.stage === 4) return lessonBar() + stageReflect();
-  return stageCelebrate();
+  if (L.stage >= L.stages.length) return stageCelebrate();
+  return lessonBar() + STAGE_VIEW[L.stages[L.stage]]();
 }
 
 function nextStage() {
   const rec = dayRec(dayKey());
-  rec.stages[STAGE_META[L.stage].key] = true;
+  rec.stages[L.stages[L.stage]] = true;
   L.stage++; L.idx = 0; L.flipped = false; L.picked = null; L.revealed = false;
-  if (L.stage >= 5) finishDay();
+  if (L.stage >= L.stages.length) finishDay();
   save(); render();
+}
+
+/* --- 0. 今日盤點 --------------------------------------------------------
+   關鍵設計：不論想不想得起來，答案都會翻出來。
+   所以盤點同時是一次曝光，不是純考試。                                    */
+function stageTriage() {
+  if (L.idx >= L.triage.length) {
+    const left = untriagedInPool(L.phase).length;
+    return doneBlock(`盤點完成 ${L.triage.length} 張 📋`,
+      left ? `這個主題還有 ${left} 張，明天的課程會繼續盤。` : '這個主題全部盤完了，接下來就專心複習 👌');
+  }
+  const c = CARD_BY_ID[L.triage[L.idx]];
+  const sc = SCENARIOS[c.scenario];
+  const intro = L.idx === 0
+    ? `<div class="intro">📋 <b>今日盤點</b><br><span class="muted">先確認你已經會什麼。想不出來完全沒關係 —— 答案一定會翻給你看。</span></div>`
+    : '';
+  return `
+  ${intro}
+  <div class="counter-line">${L.idx + 1} / ${L.triage.length}</div>
+  <div class="flip ${L.flipped ? 'flipped' : ''}" data-act="flip">
+    <div class="flip-inner">
+      <div class="face front">
+        <div class="badge" style="background:${sc.color}1a;color:${sc.color}">${sc.emoji} ${sc.name}</div>
+        <div class="zh-big">${esc(c.zh)}</div>
+        <div class="say-hint">🗣️ 試著說說看<br><span class="muted small">想不出來就直接點卡片</span></div>
+      </div>
+      <div class="face back">
+        <div class="jp-big">${esc(c.jp)}</div>
+        <div class="kana">${esc(c.kana)}</div>
+        ${S.settings.romaji ? `<div class="romaji">${esc(c.romaji)}</div>` : ''}
+        <div class="zh-small">${esc(c.zh)}</div>
+      </div>
+    </div>
+  </div>
+  ${L.flipped ? triageButtons() : '<div class="muted center tap-hint">👆 點卡片看答案</div>'}`;
+}
+
+function triageButtons() {
+  const g = [
+    ['known', '秒答', '✅', 't-known'],
+    ['quick', '想一下才想到', '🤔', 't-quick'],
+    ['cold', '說不出來', '😅', 't-cold']
+  ];
+  return `<div class="triage-btns">${g.map(x =>
+    `<button class="triage ${x[3]}" data-act="triagePick" data-v="${x[0]}">
+      <span class="t-emoji">${x[2]}</span><b>${x[1]}</b></button>`
+  ).join('')}</div>
+  <div class="muted xsmall center">「秒答」的卡不進每日複習，末期模擬時才會抽查。</div>`;
 }
 
 /* --- 1. 暖身 --- */
 function stageWarmup() {
-  if (!L.warmup.length) return skipBlock('昨天沒有複習紀錄，暖身先跳過 ☀️');
   if (L.idx >= L.warmup.length) return doneBlock(`暖身完成 ${L.stats.warmupRight} / ${L.stats.warmupTotal} ✅`);
   const q = L.warmup[L.idx];
   const opts = q.options.map(o => {
@@ -1423,7 +1662,6 @@ function stageWarmup() {
 
 /* --- 2. SRS 主複習 --- */
 function stageSrs() {
-  if (!L.srs.length) return skipBlock('今天沒有到期的卡，直接進下一關 🎴');
   if (L.idx >= L.srs.length) return doneBlock(`主複習完成 ${L.stats.srsDone} 張 🎴`);
   const item = L.srs[L.idx];
   const c = CARD_BY_ID[item.id];
@@ -1540,6 +1778,7 @@ function stageCelebrate() {
     <div class="recap">
       <div><b>${rec.reviewed}</b><span>複習卡</span></div>
       <div><b>${rec.introduced}</b><span>新卡</span></div>
+      ${rec.triaged ? `<div><b>${rec.triaged}</b><span>盤點</span></div>` : ''}
       <div><b>${rec.kanjiRight}/${rec.kanjiTotal}</b><span>漢字</span></div>
     </div>
     <div class="streak-line">🔥 連續 <b>${S.streak.count}</b> 天 ・ 距東京還有 <b>${daysLeft()}</b> 天</div>
@@ -1551,19 +1790,10 @@ function stageCelebrate() {
 /* Array.from 而非 split('')：emoji 是 UTF-16 代理對，split('') 會把它切成兩半 */
 function confettiPieces(str) { return Array.from(str); }
 
-function skipBlock(msg) {
-  return `<div class="card hero"><div class="hero-emoji">⏭️</div><p>${esc(msg)}</p>
-    <button class="btn primary big" data-act="nextStage">繼續 →</button></div>`;
-}
-function doneBlock(msg) {
+function doneBlock(msg, sub) {
   return `<div class="card hero"><div class="hero-emoji">✅</div><h2>${msg}</h2>
+    ${sub ? `<p class="muted small">${esc(sub)}</p>` : ''}
     <button class="btn primary big" data-act="nextStage">下一關 →</button></div>`;
-}
-function celebrateBlock(emoji, title, html, btn, act, btn2, act2) {
-  return `<div class="card hero"><div class="hero-emoji">${emoji}</div><h2>${title}</h2>
-    <p class="muted">${html}</p>
-    <button class="btn primary big" data-act="${act}">${btn}</button>
-    ${btn2 ? `<button class="btn ghost" data-act="${act2}">${btn2}</button>` : ''}</div>`;
 }
 
 function finishDay() {
@@ -1571,6 +1801,7 @@ function finishDay() {
   rec.done = true;
   bumpStreak();
   save();
+  syncSoon();
 }
 
 /* ---------------------------- 一日東京 ---------------------------- */
@@ -1635,12 +1866,12 @@ function viewBrowse() {
     const lv = cardLevel(c);
     const dot = lv === 'strong' ? 'green' : lv === 'weak' ? 'yellow' : 'gray';
     const st = S.cards[c.id];
-    let meta = '未學';
+    let meta = '未盤點';
     if (st && st.status === 'known') meta = '已會';
     else if (st && st.status === 'learning' && st.dueDate) {
       const d = Math.max(0, Math.ceil((st.dueDate - startOfToday()) / DAY_MS));
       meta = d <= 0 ? '今天' : d + ' 天後';
-    } else if (st && st.diagRusty) meta = '待排入';
+    } else if (st && st.triaged) meta = '待排入';
     return `<div class="browse-row">
       <i class="dot ${dot}"></i>
       <div class="br-main"><div class="br-jp">${c.star ? '★ ' : ''}${esc(c.jp)}</div>
@@ -1658,18 +1889,19 @@ function viewBrowse() {
 
 /* ---------------------------- 備份 ---------------------------- */
 function viewBackup() {
-  const diagnosed = CARDS.filter(c => { const st = S.cards[c.id]; return st && (st.status !== 'new' || st.diagRusty); }).length;
+  const triaged = CARDS.filter(c => { const st = S.cards[c.id]; return st && st.triaged; }).length;
   const inSrs = CARDS.filter(c => S.cards[c.id] && S.cards[c.id].status === 'learning').length;
-  const waiting = CARDS.filter(c => { const st = S.cards[c.id]; return st && st.status === 'new' && st.diagRusty; }).length;
+  const waiting = CARDS.filter(c => { const st = S.cards[c.id]; return st && st.status === 'new' && st.triaged; }).length;
   return `<div class="topbar"><button class="icon-btn" data-act="go-home">←</button>
     <div class="brand">⚙️ 設定與備份</div><div class="counter"></div></div>
   <div class="card">
     <h3>進度概況</h3>
     <div class="kv"><span>開始日期</span><b>${S.startDay}</b></div>
-    <div class="kv"><span>虛擬進度</span><b>Day ${curriculumDay()} ・ ${currentPhase().name}</b></div>
-    <div class="kv"><span>已診斷卡片</span><b>${diagnosed} / ${CARDS.length}</b></div>
+    <div class="kv"><span>課表進度</span><b>Day ${virtualDay()} ・ ${currentPhase().name}</b></div>
+    <div class="kv"><span>已盤點卡片</span><b>${triaged} / ${CARDS.length}</b></div>
     <div class="kv"><span>已排入複習</span><b>${inSrs} 張</b></div>
     <div class="kv"><span>等待釋出</span><b>${waiting} 張</b></div>
+    <div class="kv"><span>盤點結果</span><b>秒答 ${S.triage.known} ・ 想一下 ${S.triage.quick} ・ 說不出 ${S.triage.cold}</b></div>
     <div class="kv"><span>連續天數</span><b>${S.streak.count}（最佳 ${S.streak.best || 0}）</b></div>
     <div class="kv"><span>本月補簽卡</span><b>${S.streak.freezes} / 2</b></div>
   </div>
@@ -1680,19 +1912,53 @@ function viewBackup() {
       <select id="newperday" class="select">
         ${[4, 6, 8, 10, 12].map(n => `<option value="${n}" ${S.settings.newPerDay === n ? 'selected' : ''}>${n} 張</option>`).join('')}
       </select></div>
+    <div class="kv"><span>每日盤點量</span>
+      <select id="triageperday" class="select">
+        ${[4, 6, 8, 10, 12].map(n => `<option value="${n}" ${S.settings.triagePerDay === n ? 'selected' : ''}>${n} 張</option>`).join('')}
+      </select></div>
   </div>
+  ${syncCard()}
   <div class="card">
     <h3>備份 / 還原</h3>
-    <p class="muted small">所有進度只存在這台裝置的瀏覽器裡。換手機、清快取前，記得先匯出。</p>
+    <p class="muted small">單檔備份是最後一道保險，跟同步碼互不衝突。換手機、清快取前記得先匯出一份。</p>
     <button class="btn primary" data-act="export">⬇️ 匯出 JSON 備份</button>
     <button class="btn ghost" data-act="importClick">⬆️ 匯入備份檔</button>
     <input type="file" id="import-file" accept="application/json,.json" hidden>
   </div>
   <div class="card danger">
     <h3>重來一次</h3>
-    <p class="muted small">清除全部進度，回到診斷模式。無法復原。</p>
+    <p class="muted small">清除全部進度，從 Day 1 重新開始。無法復原。</p>
     <button class="btn warn" data-act="reset">🗑 清除所有進度</button>
   </div><div class="pad"></div>`;
+}
+
+function syncCard() {
+  if (!syncConfigured()) {
+    return `<div class="card">
+      <h3>跨裝置同步</h3>
+      <p class="muted small">還沒接上雲端。開一個免費的 Supabase 專案、執行 <code>supabase-setup.sql</code>，
+      再把網址與 anon key 填進 <code>config.js</code>，這裡就會出現同步碼。詳細步驟見 README。</p>
+    </div>`;
+  }
+  const code = S.sync && S.sync.code;
+  const last = S.sync && Math.max(S.sync.lastPush || 0, S.sync.lastPull || 0);
+  return `<div class="card">
+    <h3>跨裝置同步</h3>
+    ${code ? `
+      <p class="muted small">在另一台裝置的下方欄位輸入這組碼，兩邊的進度就會合併。不需要帳號密碼。</p>
+      <div class="synccode" data-act="syncCopy" title="點一下複製">${esc(prettyCode(code))}</div>
+      <div class="kv"><span>上次同步</span><b>${agoText(last)}</b></div>
+      <button class="btn primary" data-act="syncNow">🔄 立即同步</button>
+    ` : `
+      <p class="muted small">產生一組同步碼，就能在手機和電腦之間接續進度。不需要帳號密碼，也不會收集 Email。</p>
+      <button class="btn primary" data-act="syncEnable">🔗 產生我的同步碼</button>
+    `}
+    <div class="sync-link">
+      <input id="sync-input" class="input" type="text" inputmode="latin" autocapitalize="characters"
+             autocomplete="off" spellcheck="false" placeholder="貼上另一台裝置的同步碼">
+      <button class="btn ghost" data-act="syncLink">⬇️ 用這組碼接續</button>
+    </div>
+  </div>`;
 }
 
 function exportJSON() {
@@ -1765,16 +2031,27 @@ const ACTIONS = {
   'filter': (el) => { browseFilter = el.dataset.k; render(); },
   'freeze': useFreeze,
 
-  'startDiag': startDiag,
-  'diagKnown': () => diagAnswer(true),
-  'diagRusty': () => diagAnswer(false),
-  'finishDiag': () => { bumpStreak(); save(); go('home'); },
-  'finishDiagSession': () => go('home'),
-  'contDiag': () => { D.limit += 50; render(); },
-
   'startLesson': startLesson,
   'quitLesson': () => { clearRec(); if (confirm('離開今日課程？已完成的部分會保留。')) go('home'); },
   'nextStage': nextStage,
+
+  'triagePick': (el) => {
+    const v = el.dataset.v;
+    const st = cs(L.triage[L.idx]);
+    st.triaged = true;
+    if (v === 'known') {
+      st.status = 'known'; st.dueDate = null; st.seed = null;
+    } else {
+      // 進 SRS 候補池，實際排入由 30 天課表按階段每天釋出
+      st.status = 'new'; st.dueDate = null; st.seed = v;
+      st.interval = 0; st.repetitions = 0;
+    }
+    S.triage[v]++;
+    dayRec(dayKey()).triaged++;
+    L.stats.triaged++;
+    L.idx++; L.flipped = false;
+    save(); render();
+  },
 
   'warmupPick': (el) => {
     if (L.picked) return;
@@ -1859,11 +2136,43 @@ const ACTIONS = {
     save(); clearRec(); go('home');
   },
 
+  'syncEnable': () => {
+    S.sync = { code: newSyncCode(), lastPush: 0, lastPull: 0 };
+    save(); render();
+    syncPush().then(() => { toast('同步碼已建立，進度已上傳 ☁️'); render(); })
+              .catch(e => toast('⚠️ 上傳失敗：' + e.message));
+  },
+  'syncNow': () => {
+    toast('同步中…');
+    syncPull().then(syncPush)
+      .then(() => { toast('同步完成 ✅'); render(); })
+      .catch(e => toast('⚠️ 同步失敗：' + e.message));
+  },
+  'syncCopy': () => {
+    const code = S.sync && S.sync.code;
+    if (!code) return;
+    const done = () => toast('同步碼已複製 📋');
+    if (navigator.clipboard) navigator.clipboard.writeText(code).then(done).catch(() => toast(code));
+    else toast(code);
+  },
+  'syncLink': () => {
+    const input = $('#sync-input');
+    const code = normalizeCode(input && input.value);
+    if (code.length !== SYNC_CODE_LEN) return toast('同步碼格式不對（應為 12 碼）');
+    toast('接續中…');
+    syncPull(code)
+      .then(found => {
+        if (!found) return toast('⚠️ 找不到這組同步碼，請再確認一次');
+        return syncPush().then(() => { toast('已接續並合併進度 ✅'); render(); });
+      })
+      .catch(e => toast('⚠️ 接續失敗：' + e.message));
+  },
+
   'export': exportJSON,
   'importClick': () => $('#import-file').click(),
   'reset': () => {
     if (!confirm('確定清除所有進度？此動作無法復原。')) return;
-    if (!confirm('再確認一次：全部歸零，回到診斷模式。')) return;
+    if (!confirm('再確認一次：全部歸零，從 Day 1 重新開始。')) return;
     localStorage.removeItem(STORE_KEY);
     S = defaultState(); save(); go('home');
   },
@@ -1884,6 +2193,8 @@ function afterRender() {
   if (rt) rt.onchange = () => { S.settings.romaji = rt.checked; save(); toast('已更新'); };
   const np = $('#newperday');
   if (np) np.onchange = () => { S.settings.newPerDay = +np.value; save(); toast('每日新卡：' + np.value + ' 張'); };
+  const tp = $('#triageperday');
+  if (tp) tp.onchange = () => { S.settings.triagePerDay = +tp.value; save(); toast('每日盤點：' + tp.value + ' 張'); };
   const ri = $('#reflect-input');
   if (ri) ri.addEventListener('keydown', e => { if (e.key === 'Enter') ACTIONS.saveReflect($('[data-act="saveReflect"]')); });
 }
@@ -1894,6 +2205,7 @@ refreshFreezeMonth();
 checkStreakBroken();
 save();
 render();
+syncOnOpen();
 
 </script>
 </body>
