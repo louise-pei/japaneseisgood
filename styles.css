@@ -243,6 +243,19 @@ p{margin:6px 0}
 .tip{margin-top:12px;font-size:13.5px;color:#5F594F;background:rgba(245,166,35,.14);padding:10px 12px;border-radius:12px;text-align:left}
 .station{display:flex;gap:12px;align-items:flex-start;background:#fff;border-radius:18px;padding:16px;box-shadow:var(--shadow);margin-bottom:14px}
 
+/* ---------- 發音按鈕 ---------- */
+.speak{display:flex;gap:8px;justify-content:center;margin:10px 0 2px}
+.spk{
+  border:none;background:rgba(46,134,171,.12);border-radius:99px;
+  width:46px;height:38px;font-size:17px;cursor:pointer;flex:none;
+  display:flex;align-items:center;justify-content:center;
+  transition:transform .08s,background .15s;
+}
+.spk:active{transform:scale(.9);background:rgba(46,134,171,.24)}
+.bubble .speak{justify-content:flex-start;margin:8px 0 0}
+.browse-row .spk{width:38px;height:34px;font-size:15px}
+.br-side{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex:none}
+
 /* ---------- 錄音 ---------- */
 .rec{margin-top:12px}
 .rec-btn{background:rgba(0,0,0,.05);font-size:14px;padding:11px;margin-top:0}
@@ -286,7 +299,7 @@ p{margin:6px 0}
 .br-jp{font-size:17px;font-weight:600;line-height:1.4}
 .br-kana{font-size:12px;color:#8C857D}
 .br-zh{font-size:13.5px;color:#5F594F;margin-top:2px}
-.br-meta{font-size:11.5px;color:var(--muted);flex:none;text-align:right}
+.br-meta{font-size:11.5px;color:var(--muted);text-align:right;white-space:nowrap}
 
 /* ---------- 設定 ---------- */
 .kv{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid var(--line);font-size:14.5px}

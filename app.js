@@ -34,7 +34,7 @@ function defaultState() {
     streak: { count: 0, best: 0, lastDay: null, freezes: 2, freezeMonth: monthKey(), frozen: [] },
     days: {},
     tokyo: { runs: [] },
-    settings: { newPerDay: 8, triagePerDay: 8, romaji: true },
+    settings: { newPerDay: 8, triagePerDay: 8, romaji: true, slowRate: 0.75, voicePackAt: 0 },
     reflections: []
   };
 }
@@ -561,6 +561,7 @@ function stageTriage() {
         <div class="jp-big">${esc(c.jp)}</div>
         <div class="kana">${esc(c.kana)}</div>
         ${S.settings.romaji ? `<div class="romaji">${esc(c.romaji)}</div>` : ''}
+        ${speakButtons(c.jp)}
         <div class="zh-small">${esc(c.zh)}</div>
       </div>
     </div>
@@ -599,6 +600,7 @@ function stageWarmup() {
     <div class="muted small">這句是什麼意思？</div>
     <div class="jp-quiz">${esc(q.card.jp)}</div>
     <div class="kana">${esc(q.card.kana)}</div>
+    ${speakButtons(q.card.jp)}
   </div>
   <div class="opts">${opts}</div>
   ${L.picked ? '<button class="btn primary big" data-act="warmupNext">下一題 →</button>' : ''}`;
@@ -625,6 +627,7 @@ function stageSrs() {
         <div class="jp-big">${esc(c.jp)}</div>
         <div class="kana">${esc(c.kana)}</div>
         ${S.settings.romaji ? `<div class="romaji">${esc(c.romaji)}</div>` : ''}
+        ${speakButtons(c.jp)}
         <div class="zh-small">${esc(c.zh)}</div>
       </div>
     </div>
@@ -652,6 +655,7 @@ function stageDialog() {
       <div class="npc-avatar">🧑‍🍳</div>
       <div class="bubble"><div class="bubble-jp">${esc(step.npc.jp)}</div>
       <div class="bubble-kana">${esc(step.npc.kana)}</div>
+      ${speakButtons(step.npc.jp, 'npc')}
       <div class="bubble-zh">${esc(step.npc.zh)}</div></div></div>` : '';
   const nar = step.narration ? `<div class="narration">${esc(step.narration)}</div>` : '';
   const ans = L.revealed ? `
@@ -660,6 +664,7 @@ function stageDialog() {
       <div class="jp-big">${esc(step.answer.jp)}</div>
       <div class="kana">${esc(step.answer.kana)}</div>
       ${S.settings.romaji ? `<div class="romaji">${esc(step.answer.romaji)}</div>` : ''}
+      ${speakButtons(step.answer.jp)}
       ${step.tip ? `<div class="tip">💡 ${esc(step.tip)}</div>` : ''}
     </div>
     ${gradeButtons('dialogGrade')}`
@@ -692,7 +697,8 @@ function stageKanji() {
   <div class="counter-line">${L.idx + 1} / ${L.kanji.length}</div>
   <div class="card sign-card">
     <div class="sign">${esc(q.card.jp)}</div>
-    ${L.picked ? `<div class="kana">${esc(q.card.kana)} ・ ${esc(q.card.romaji)}</div>` : ''}
+    ${L.picked ? `<div class="kana">${esc(q.card.kana)} ・ ${esc(q.card.romaji)}</div>
+      ${speakButtons(q.card.jp)}` : ''}
   </div>
   <div class="opts">${opts}</div>
   ${L.picked ? '<button class="btn primary big" data-act="kanjiNext">下一張 →</button>' : ''}`;
@@ -775,6 +781,7 @@ function viewTokyo() {
   const npc = step.npc ? `<div class="npc"><div class="npc-avatar">🧑</div>
     <div class="bubble"><div class="bubble-jp">${esc(step.npc.jp)}</div>
     <div class="bubble-kana">${esc(step.npc.kana)}</div>
+    ${speakButtons(step.npc.jp, 'npc')}
     <div class="bubble-zh">${esc(step.npc.zh)}</div></div></div>` : '';
   const ans = T.revealed ? `
     <div class="card answer-card">
@@ -782,6 +789,7 @@ function viewTokyo() {
       <div class="jp-big">${esc(step.answer.jp)}</div>
       <div class="kana">${esc(step.answer.kana)}</div>
       ${S.settings.romaji ? `<div class="romaji">${esc(step.answer.romaji)}</div>` : ''}
+      ${speakButtons(step.answer.jp)}
     </div>${gradeButtons('tokyoGrade')}`
     : `<button class="btn primary big" data-act="tokyoReveal">看參考答案</button>`;
   return `
@@ -821,7 +829,10 @@ function viewBrowse() {
       <div class="br-main"><div class="br-jp">${c.star ? '★ ' : ''}${esc(c.jp)}</div>
       <div class="br-kana">${esc(c.kana)}${S.settings.romaji ? ' ・ ' + esc(c.romaji) : ''}</div>
       <div class="br-zh">${esc(c.zh)}</div></div>
-      <div class="br-meta">${meta}</div>
+      <div class="br-side">
+        ${audioSrc(c.jp) ? `<button class="spk" data-act="speak" data-t="${esc(c.jp)}" aria-label="播放發音">🔊</button>` : ''}
+        <div class="br-meta">${meta}</div>
+      </div>
     </div>`;
   }).join('');
 
@@ -861,6 +872,7 @@ function viewBackup() {
         ${[4, 6, 8, 10, 12].map(n => `<option value="${n}" ${S.settings.triagePerDay === n ? 'selected' : ''}>${n} 張</option>`).join('')}
       </select></div>
   </div>
+  ${voiceCard()}
   ${syncCard()}
   <div class="card">
     <h3>備份 / 還原</h3>
@@ -874,6 +886,25 @@ function viewBackup() {
     <p class="muted small">清除全部進度，從 Day 1 重新開始。無法復原。</p>
     <button class="btn warn" data-act="reset">🗑 清除所有進度</button>
   </div><div class="pad"></div>`;
+}
+
+function voiceCard() {
+  if (!audioAvailable()) return '';
+  const total = audioFileList().length;
+  const mb = (total * 12 / 1024).toFixed(1);   // 實測平均約 12 KB/則
+  return `<div class="card">
+    <h3>發音</h3>
+    <p class="muted small">卡片和對話旁邊的 🔊 播放範例，🐢 是慢速版，適合跟著唸。
+    聽完可以用參考答案下面的錄音鍵錄自己，再回放對照。</p>
+    <div class="kv"><span>慢速倍率</span>
+      <select id="slowrate" class="select">
+        ${[0.5, 0.6, 0.75].map(r => `<option value="${r}" ${S.settings.slowRate === r ? 'selected' : ''}>${r}×</option>`).join('')}
+      </select></div>
+    <div class="kv"><span>離線語音包</span><b id="voice-status">${total} 則 ・ 約 ${mb} MB</b></div>
+    <button class="btn primary" data-act="voiceDownload">⬇️ 下載語音包</button>
+    <button class="btn ghost" data-act="voiceTest">🔊 試聽（すみません）</button>
+    <p class="muted xsmall">💡 沒聲音的話，先確認 iPhone 側邊的<b>靜音開關</b>沒有打開 —— 靜音模式會讓網頁音訊完全無聲。</p>
+  </div>`;
 }
 
 function syncCard() {
@@ -1080,6 +1111,27 @@ const ACTIONS = {
     save(); clearRec(); go('home');
   },
 
+  'speak': (el) => playAudio(el.dataset.t, el.dataset.k, !!el.dataset.slow),
+  'voiceTest': () => playAudio('すみません'),
+  'voiceDownload': (el) => {
+    const status = $('#voice-status');
+    el.disabled = true;
+    downloadVoicePack((done, total, failed) => {
+      if (status) status.textContent = `下載中 ${done} / ${total}` + (failed ? `（${failed} 則失敗）` : '');
+    }).then(r => {
+      if (status) status.textContent = r.failed
+        ? `已下載 ${r.total - r.failed} / ${r.total}（${r.failed} 則失敗）`
+        : `✅ 已完整下載 ${r.total} 則`;
+      S.settings.voicePackAt = Date.now(); save();
+      toast(r.failed ? '部分音檔下載失敗，可以再按一次' : '語音包下載完成，離線也聽得到 🎧');
+      el.disabled = false;
+    }).catch(e => {
+      if (status) status.textContent = '下載失敗';
+      toast('⚠️ ' + e.message);
+      el.disabled = false;
+    });
+  },
+
   'syncEnable': () => {
     S.sync = { code: newSyncCode(), lastPush: 0, lastPull: 0 };
     save(); render();
@@ -1139,6 +1191,14 @@ function afterRender() {
   if (np) np.onchange = () => { S.settings.newPerDay = +np.value; save(); toast('每日新卡：' + np.value + ' 張'); };
   const tp = $('#triageperday');
   if (tp) tp.onchange = () => { S.settings.triagePerDay = +tp.value; save(); toast('每日盤點：' + tp.value + ' 張'); };
+  const sr = $('#slowrate');
+  if (sr) sr.onchange = () => { S.settings.slowRate = +sr.value; save(); playAudio('すみません', 'main', true); };
+  const vs = $('#voice-status');
+  if (vs) voicePackCached().then(n => {
+    const total = audioFileList().length;
+    if (n >= total && total) vs.textContent = `✅ 已完整下載 ${total} 則`;
+    else if (n) vs.textContent = `已快取 ${n} / ${total} 則`;
+  });
   const ri = $('#reflect-input');
   if (ri) ri.addEventListener('keydown', e => { if (e.key === 'Enter') ACTIONS.saveReflect($('[data-act="saveReflect"]')); });
 }

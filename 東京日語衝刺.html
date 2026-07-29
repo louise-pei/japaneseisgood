@@ -255,6 +255,19 @@ p{margin:6px 0}
 .tip{margin-top:12px;font-size:13.5px;color:#5F594F;background:rgba(245,166,35,.14);padding:10px 12px;border-radius:12px;text-align:left}
 .station{display:flex;gap:12px;align-items:flex-start;background:#fff;border-radius:18px;padding:16px;box-shadow:var(--shadow);margin-bottom:14px}
 
+/* ---------- 發音按鈕 ---------- */
+.speak{display:flex;gap:8px;justify-content:center;margin:10px 0 2px}
+.spk{
+  border:none;background:rgba(46,134,171,.12);border-radius:99px;
+  width:46px;height:38px;font-size:17px;cursor:pointer;flex:none;
+  display:flex;align-items:center;justify-content:center;
+  transition:transform .08s,background .15s;
+}
+.spk:active{transform:scale(.9);background:rgba(46,134,171,.24)}
+.bubble .speak{justify-content:flex-start;margin:8px 0 0}
+.browse-row .spk{width:38px;height:34px;font-size:15px}
+.br-side{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex:none}
+
 /* ---------- 錄音 ---------- */
 .rec{margin-top:12px}
 .rec-btn{background:rgba(0,0,0,.05);font-size:14px;padding:11px;margin-top:0}
@@ -298,7 +311,7 @@ p{margin:6px 0}
 .br-jp{font-size:17px;font-weight:600;line-height:1.4}
 .br-kana{font-size:12px;color:#8C857D}
 .br-zh{font-size:13.5px;color:#5F594F;margin-top:2px}
-.br-meta{font-size:11.5px;color:var(--muted);flex:none;text-align:right}
+.br-meta{font-size:11.5px;color:var(--muted);text-align:right;white-space:nowrap}
 
 /* ---------- 設定 ---------- */
 .kv{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid var(--line);font-size:14.5px}
@@ -883,6 +896,275 @@ const REFLECTION_PROMPTS = [
 
 </script>
 <script>
+/* 由 make_audio.py 自動產生，請勿手動編輯。
+   原文 → 音檔名。App 靠這份索引判斷哪些文字有音檔，
+   沒有的就不顯示喇叭按鈕，避免出現按了沒反應的按鈕。 */
+const AUDIO_INDEX = {
+ "main": {
+  "すみません": "ba911f8468.m4a",
+  "ありがとうございます": "431e0b03f7.m4a",
+  "お願いします": "0dbd6ec2b2.m4a",
+  "〜をください": "70c530abfe.m4a",
+  "〜てもいいですか": "6f2d4308df.m4a",
+  "〜はどこですか": "9d41d7d045.m4a",
+  "〜はありますか": "d7ddd1ed66.m4a",
+  "いくらですか": "c24cd0f9cc.m4a",
+  "大丈夫です": "a4dce5f219.m4a",
+  "結構です": "a0e1725413.m4a",
+  "おはようございます": "777f79450a.m4a",
+  "こんにちは": "05939b3a2b.m4a",
+  "こんばんは": "59bcceb0c5.m4a",
+  "一": "3bb45f0726.m4a",
+  "二": "89e0e7a70f.m4a",
+  "三": "be3eb2cb35.m4a",
+  "四": "1ab0cb8343.m4a",
+  "五": "d968bd6800.m4a",
+  "六": "77637b2f1d.m4a",
+  "七": "a24a08c51d.m4a",
+  "八": "c02d18630d.m4a",
+  "九": "26c9906738.m4a",
+  "十": "b541b4eca3.m4a",
+  "一つ": "e2ae22cb32.m4a",
+  "二つ": "06199d0b81.m4a",
+  "三つ": "959cb1dea5.m4a",
+  "一人": "26c60cc4dd.m4a",
+  "二人": "433db6f393.m4a",
+  "三人": "b180037047.m4a",
+  "〜枚": "7abfe62de9.m4a",
+  "〜本": "c8730e0cf6.m4a",
+  "〜杯": "245424e6d2.m4a",
+  "〜時": "5fd1e16555.m4a",
+  "〜分": "e20ddb2b19.m4a",
+  "今日": "945e1e67ef.m4a",
+  "明日": "10e87c94b7.m4a",
+  "もう一度お願いします": "2f1a50acf4.m4a",
+  "ゆっくり話してください": "31d303088f.m4a",
+  "すみません、わかりません": "fe38687fe0.m4a",
+  "日本語が少しだけわかります": "af9844e7d3.m4a",
+  "ここがわかりません": "f0b670518e.m4a",
+  "英語のメニューはありますか": "3d8333e5e8.m4a",
+  "書いてもらえますか": "d733c1b0b3.m4a",
+  "四名です": "a10fd7332b.m4a",
+  "予約はしていません": "7312641961.m4a",
+  "おすすめは何ですか": "ec901a9c4c.m4a",
+  "これをください": "dddd8646be.m4a",
+  "とりあえず、生ビールをください": "a65c95d298.m4a",
+  "〜はアレルギーがあります": "513b7d64c3.m4a",
+  "〜は食べられません": "47472ca95e.m4a",
+  "これは何のお肉ですか": "2363a7c205.m4a",
+  "お会計お願いします": "00f5f0222b.m4a",
+  "カードは使えますか": "3dbbb0bd28.m4a",
+  "ごちそうさまでした": "7ca128e66a.m4a",
+  "持ち帰りできますか": "b9ac14a4b2.m4a",
+  "お水をください": "a661c4fed5.m4a",
+  "卵": "c769c2b3f7.m4a",
+  "牛乳": "a8cd105964.m4a",
+  "小麦": "672ead5b5f.m4a",
+  "そば": "206a1af9f3.m4a",
+  "食券": "7b0dd2b38f.m4a",
+  "券売機": "50c436cc5f.m4a",
+  "〜を探しています": "aedcd8c844.m4a",
+  "試着してもいいですか": "6dd065790e.m4a",
+  "Mサイズはありますか": "fb14ee9f9d.m4a",
+  "もう少し大きいサイズはありますか": "eac6621bf8.m4a",
+  "別の色はありますか": "77d1645fbb.m4a",
+  "税込みですか": "40611ea213.m4a",
+  "免税でお願いします": "90dcddd871.m4a",
+  "パスポートはこちらです": "82d0be7ffb.m4a",
+  "袋をください": "339b66cb3d.m4a",
+  "これだけです": "c7f874fe54.m4a",
+  "〜駅はどこですか": "aab0dfec47.m4a",
+  "この電車は〜に行きますか": "21a9a78203.m4a",
+  "〜に行きたいです": "d57accdf05.m4a",
+  "何番線ですか": "79b5cf6eae.m4a",
+  "乗り換えはどこですか": "47543c3e44.m4a",
+  "ICカードにチャージしたいです": "cd6dd25192.m4a",
+  "切符はどこで買えますか": "0e8935c98c.m4a",
+  "〜までお願いします": "268b95336e.m4a",
+  "ここで降ります": "2650d4bbe6.m4a",
+  "〜の名前で予約しています": "b8dfc5091a.m4a",
+  "チェックインお願いします": "c1f8958efc.m4a",
+  "荷物を預かっていただけますか": "ce6c4442aa.m4a",
+  "朝食は何時からですか": "99e10772c0.m4a",
+  "Wi-Fiのパスワードを教えてください": "7935f8748b.m4a",
+  "タオルをもう一枚いただけますか": "31cabcb9fd.m4a",
+  "チェックアウトは何時ですか": "c19feded6f.m4a",
+  "改札": "a4f2daa4a9.m4a",
+  "出口": "5c7ef07a5b.m4a",
+  "入口": "097442b68b.m4a",
+  "精算": "9c6aa4c86f.m4a",
+  "精算機": "6c840e894f.m4a",
+  "乗り換え": "53f7c99f10.m4a",
+  "〜番線": "55446326e8.m4a",
+  "割引": "1c6e2691f1.m4a",
+  "税込": "cfe8296c57.m4a",
+  "税抜": "f1b3ef5e1c.m4a",
+  "両替": "3e55633ae6.m4a",
+  "免税": "11fc21754f.m4a",
+  "営業中": "32c5c20a95.m4a",
+  "準備中": "8a1094184e.m4a",
+  "使用中": "af49169505.m4a",
+  "禁煙": "93214a4456.m4a",
+  "立入禁止": "fa9fe3ef61.m4a",
+  "お手洗い": "8198542e30.m4a",
+  "会計": "bd78c4c0c9.m4a",
+  "売切れ": "5e47a52d65.m4a",
+  "半額": "ad3349094c.m4a",
+  "北口": "9eaac35f66.m4a",
+  "南口": "70186a8b1a.m4a",
+  "東口": "b7df03f8a6.m4a",
+  "西口": "3a50254238.m4a",
+  "無料": "a78bdcb0a2.m4a",
+  "有料": "32f2c70189.m4a",
+  "すみません、おすすめは何ですか": "e86cce8af9.m4a",
+  "お会計お願いします。カードは使えますか": "53e8abf15a.m4a",
+  "すみません、おすすめを教えてください": "f83904b0ed.m4a",
+  "小麦はアレルギーがあります": "8f757bc574.m4a",
+  "すみません、新宿駅はどこですか": "51bc6ed034.m4a",
+  "この電車は浅草に行きますか": "93328a6fb7.m4a",
+  "免税でお願いします。パスポートはこちらです": "f4ac476e21.m4a",
+  "陳の名前で予約しています。チェックインお願いします": "637c5887fe.m4a",
+  "スイカをください": "71d0d8307c.m4a",
+  "四枚お願いします": "d83c34eee5.m4a",
+  "全部でいくらですか": "667b6e8859.m4a",
+  "この電車は上野に行きますか": "7b4f989079.m4a",
+  "陳の名前で予約しています": "37b67c8c38.m4a",
+  "卵はアレルギーがあります": "9a169602d1.m4a",
+  "すみません、日本語が少しだけわかります": "6b686490ae.m4a",
+  "ここに行きたいです": "0723363e2f.m4a"
+ },
+ "npc": {
+  "いらっしゃいませ。何名様ですか？": "c1ca888f56.m4a",
+  "ご予約はされていますか？": "521c88591c.m4a",
+  "本日は鶏の唐揚げがおすすめです。": "bf54ffc19b.m4a",
+  "お飲み物はいかがですか？": "8aedc505a7.m4a",
+  "一番人気はこの醤油ラーメンですよ。": "1dafd5578c.m4a",
+  "あの階段を上がって、右です。": "0009a53c60.m4a",
+  "いいえ、次のホームです。": "031be56f4c.m4a",
+  "次のホームですよ。三番線です。": "14c5e3bb76.m4a",
+  "はい、どうぞ。こちらです。": "453eca3889.m4a",
+  "税抜きの価格です。": "d20c8dd45e.m4a",
+  "袋はご利用になりますか？": "221de3485b.m4a",
+  "いらっしゃいませ。": "438e3962cb.m4a",
+  "申し訳ございません、チェックインは三時からです。": "74041af39d.m4a",
+  "はい、お預かりいたします。": "4e79e3fdbe.m4a",
+  "一枚二千円になります。": "0aed2eb13a.m4a",
+  "いいえ、六番線です。": "4f267ca3f8.m4a",
+  "この道をまっすぐ行って、二つ目の角を左です。": "4048501f14.m4a"
+ }
+};
+
+</script>
+<script>
+/* ==========================================================================
+   發音播放
+
+   音檔是事先用 macOS 的 say 產生的（見 make_audio.py），不是瀏覽器即時合成。
+   原因：使用者主要從主畫面圖示開啟（iOS standalone），那個模式下的語音／
+   音訊 API 長期不穩，而預先產生的檔案品質固定、離線可靠、每台裝置一致。
+
+   慢速跟讀直接用 <audio> 的 playbackRate，不需要另外一份慢速音檔。
+   ========================================================================== */
+
+const AUDIO_DIR = 'audio/';
+const AUDIO_CACHE = 'jp-audio-v1';   // 與 sw.js 同名，兩邊共用同一份快取
+
+let _audioEl = null;
+function audioEl() {
+  if (!_audioEl) {
+    _audioEl = new Audio();
+    _audioEl.preload = 'none';
+    // 變速時維持音高，慢速跟讀才不會變成怪腔調
+    _audioEl.preservesPitch = true;
+    _audioEl.webkitPreservesPitch = true;
+  }
+  return _audioEl;
+}
+
+function audioAvailable() {
+  return typeof AUDIO_INDEX !== 'undefined' && !!AUDIO_INDEX;
+}
+
+/* 查得到就回傳路徑，查不到回 null —— 呼叫端據此決定要不要顯示喇叭按鈕，
+   避免出現按了沒反應的按鈕 */
+function audioSrc(text, kind) {
+  if (!audioAvailable() || !text) return null;
+  const map = AUDIO_INDEX[kind === 'npc' ? 'npc' : 'main'];
+  const file = map && map[text];
+  return file ? AUDIO_DIR + file : null;
+}
+
+function playAudio(text, kind, slow) {
+  const src = audioSrc(text, kind);
+  if (!src) return;
+  const a = audioEl();
+  try {
+    a.pause();
+    a.src = src;                 // 重設 src 等於從頭播，連按同一顆＝重播
+    a.playbackRate = slow ? (S.settings.slowRate || 0.75) : 1;
+    const p = a.play();
+    if (p && p.catch) p.catch(() => toast('播不出來？檢查一下手機側邊的靜音開關 🔇'));
+  } catch (e) {
+    toast('播不出來？檢查一下手機側邊的靜音開關 🔇');
+  }
+}
+
+/* 🔊 正常速度 ／ 🐢 慢速。沒有音檔就回空字串。 */
+function speakButtons(text, kind) {
+  if (!audioSrc(text, kind)) return '';
+  const k = kind === 'npc' ? 'npc' : 'main';
+  const t = esc(text);
+  return `<div class="speak">
+    <button class="spk" data-act="speak" data-t="${t}" data-k="${k}" aria-label="播放發音">🔊</button>
+    <button class="spk" data-act="speak" data-t="${t}" data-k="${k}" data-slow="1" aria-label="慢速播放">🐢</button>
+  </div>`;
+}
+
+/* ---------------------------- 語音包 ---------------------------- */
+function audioFileList() {
+  if (!audioAvailable()) return [];
+  const set = {};
+  ['main', 'npc'].forEach(k => {
+    Object.keys(AUDIO_INDEX[k] || {}).forEach(t => { set[AUDIO_DIR + AUDIO_INDEX[k][t]] = 1; });
+  });
+  return Object.keys(set);
+}
+
+/* 直接寫 Cache API，不倚賴 service worker 有沒有啟動 —— sw.js 讀的是同一份快取 */
+async function downloadVoicePack(onProgress) {
+  const files = audioFileList();
+  if (!files.length || !('caches' in window)) throw new Error('這個瀏覽器不支援離線快取');
+  const cache = await caches.open(AUDIO_CACHE);
+  let done = 0, failed = 0;
+  const CONCURRENCY = 6;
+
+  async function worker(queue) {
+    while (queue.length) {
+      const url = queue.pop();
+      try {
+        if (!(await cache.match(url))) await cache.add(url);
+      } catch (e) { failed++; }
+      done++;
+      if (onProgress) onProgress(done, files.length, failed);
+    }
+  }
+  const queue = files.slice();
+  await Promise.all(Array.from({ length: CONCURRENCY }, () => worker(queue)));
+  return { total: files.length, failed: failed };
+}
+
+/* 回報已經存在快取裡的數量，讓設定頁能顯示真實狀態而不是只信旗標 */
+async function voicePackCached() {
+  if (!('caches' in window)) return 0;
+  try {
+    const cache = await caches.open(AUDIO_CACHE);
+    return (await cache.keys()).length;
+  } catch (e) { return 0; }
+}
+
+</script>
+<!-- build.py --with-audio 會把內嵌音檔插在這裡（必須早於 app.js 的首次渲染） -->
+<script>
 /* ==========================================================================
    跨裝置同步（同步碼，無帳號）
 
@@ -1090,7 +1372,7 @@ function defaultState() {
     streak: { count: 0, best: 0, lastDay: null, freezes: 2, freezeMonth: monthKey(), frozen: [] },
     days: {},
     tokyo: { runs: [] },
-    settings: { newPerDay: 8, triagePerDay: 8, romaji: true },
+    settings: { newPerDay: 8, triagePerDay: 8, romaji: true, slowRate: 0.75, voicePackAt: 0 },
     reflections: []
   };
 }
@@ -1617,6 +1899,7 @@ function stageTriage() {
         <div class="jp-big">${esc(c.jp)}</div>
         <div class="kana">${esc(c.kana)}</div>
         ${S.settings.romaji ? `<div class="romaji">${esc(c.romaji)}</div>` : ''}
+        ${speakButtons(c.jp)}
         <div class="zh-small">${esc(c.zh)}</div>
       </div>
     </div>
@@ -1655,6 +1938,7 @@ function stageWarmup() {
     <div class="muted small">這句是什麼意思？</div>
     <div class="jp-quiz">${esc(q.card.jp)}</div>
     <div class="kana">${esc(q.card.kana)}</div>
+    ${speakButtons(q.card.jp)}
   </div>
   <div class="opts">${opts}</div>
   ${L.picked ? '<button class="btn primary big" data-act="warmupNext">下一題 →</button>' : ''}`;
@@ -1681,6 +1965,7 @@ function stageSrs() {
         <div class="jp-big">${esc(c.jp)}</div>
         <div class="kana">${esc(c.kana)}</div>
         ${S.settings.romaji ? `<div class="romaji">${esc(c.romaji)}</div>` : ''}
+        ${speakButtons(c.jp)}
         <div class="zh-small">${esc(c.zh)}</div>
       </div>
     </div>
@@ -1708,6 +1993,7 @@ function stageDialog() {
       <div class="npc-avatar">🧑‍🍳</div>
       <div class="bubble"><div class="bubble-jp">${esc(step.npc.jp)}</div>
       <div class="bubble-kana">${esc(step.npc.kana)}</div>
+      ${speakButtons(step.npc.jp, 'npc')}
       <div class="bubble-zh">${esc(step.npc.zh)}</div></div></div>` : '';
   const nar = step.narration ? `<div class="narration">${esc(step.narration)}</div>` : '';
   const ans = L.revealed ? `
@@ -1716,6 +2002,7 @@ function stageDialog() {
       <div class="jp-big">${esc(step.answer.jp)}</div>
       <div class="kana">${esc(step.answer.kana)}</div>
       ${S.settings.romaji ? `<div class="romaji">${esc(step.answer.romaji)}</div>` : ''}
+      ${speakButtons(step.answer.jp)}
       ${step.tip ? `<div class="tip">💡 ${esc(step.tip)}</div>` : ''}
     </div>
     ${gradeButtons('dialogGrade')}`
@@ -1748,7 +2035,8 @@ function stageKanji() {
   <div class="counter-line">${L.idx + 1} / ${L.kanji.length}</div>
   <div class="card sign-card">
     <div class="sign">${esc(q.card.jp)}</div>
-    ${L.picked ? `<div class="kana">${esc(q.card.kana)} ・ ${esc(q.card.romaji)}</div>` : ''}
+    ${L.picked ? `<div class="kana">${esc(q.card.kana)} ・ ${esc(q.card.romaji)}</div>
+      ${speakButtons(q.card.jp)}` : ''}
   </div>
   <div class="opts">${opts}</div>
   ${L.picked ? '<button class="btn primary big" data-act="kanjiNext">下一張 →</button>' : ''}`;
@@ -1831,6 +2119,7 @@ function viewTokyo() {
   const npc = step.npc ? `<div class="npc"><div class="npc-avatar">🧑</div>
     <div class="bubble"><div class="bubble-jp">${esc(step.npc.jp)}</div>
     <div class="bubble-kana">${esc(step.npc.kana)}</div>
+    ${speakButtons(step.npc.jp, 'npc')}
     <div class="bubble-zh">${esc(step.npc.zh)}</div></div></div>` : '';
   const ans = T.revealed ? `
     <div class="card answer-card">
@@ -1838,6 +2127,7 @@ function viewTokyo() {
       <div class="jp-big">${esc(step.answer.jp)}</div>
       <div class="kana">${esc(step.answer.kana)}</div>
       ${S.settings.romaji ? `<div class="romaji">${esc(step.answer.romaji)}</div>` : ''}
+      ${speakButtons(step.answer.jp)}
     </div>${gradeButtons('tokyoGrade')}`
     : `<button class="btn primary big" data-act="tokyoReveal">看參考答案</button>`;
   return `
@@ -1877,7 +2167,10 @@ function viewBrowse() {
       <div class="br-main"><div class="br-jp">${c.star ? '★ ' : ''}${esc(c.jp)}</div>
       <div class="br-kana">${esc(c.kana)}${S.settings.romaji ? ' ・ ' + esc(c.romaji) : ''}</div>
       <div class="br-zh">${esc(c.zh)}</div></div>
-      <div class="br-meta">${meta}</div>
+      <div class="br-side">
+        ${audioSrc(c.jp) ? `<button class="spk" data-act="speak" data-t="${esc(c.jp)}" aria-label="播放發音">🔊</button>` : ''}
+        <div class="br-meta">${meta}</div>
+      </div>
     </div>`;
   }).join('');
 
@@ -1917,6 +2210,7 @@ function viewBackup() {
         ${[4, 6, 8, 10, 12].map(n => `<option value="${n}" ${S.settings.triagePerDay === n ? 'selected' : ''}>${n} 張</option>`).join('')}
       </select></div>
   </div>
+  ${voiceCard()}
   ${syncCard()}
   <div class="card">
     <h3>備份 / 還原</h3>
@@ -1930,6 +2224,25 @@ function viewBackup() {
     <p class="muted small">清除全部進度，從 Day 1 重新開始。無法復原。</p>
     <button class="btn warn" data-act="reset">🗑 清除所有進度</button>
   </div><div class="pad"></div>`;
+}
+
+function voiceCard() {
+  if (!audioAvailable()) return '';
+  const total = audioFileList().length;
+  const mb = (total * 12 / 1024).toFixed(1);   // 實測平均約 12 KB/則
+  return `<div class="card">
+    <h3>發音</h3>
+    <p class="muted small">卡片和對話旁邊的 🔊 播放範例，🐢 是慢速版，適合跟著唸。
+    聽完可以用參考答案下面的錄音鍵錄自己，再回放對照。</p>
+    <div class="kv"><span>慢速倍率</span>
+      <select id="slowrate" class="select">
+        ${[0.5, 0.6, 0.75].map(r => `<option value="${r}" ${S.settings.slowRate === r ? 'selected' : ''}>${r}×</option>`).join('')}
+      </select></div>
+    <div class="kv"><span>離線語音包</span><b id="voice-status">${total} 則 ・ 約 ${mb} MB</b></div>
+    <button class="btn primary" data-act="voiceDownload">⬇️ 下載語音包</button>
+    <button class="btn ghost" data-act="voiceTest">🔊 試聽（すみません）</button>
+    <p class="muted xsmall">💡 沒聲音的話，先確認 iPhone 側邊的<b>靜音開關</b>沒有打開 —— 靜音模式會讓網頁音訊完全無聲。</p>
+  </div>`;
 }
 
 function syncCard() {
@@ -2136,6 +2449,27 @@ const ACTIONS = {
     save(); clearRec(); go('home');
   },
 
+  'speak': (el) => playAudio(el.dataset.t, el.dataset.k, !!el.dataset.slow),
+  'voiceTest': () => playAudio('すみません'),
+  'voiceDownload': (el) => {
+    const status = $('#voice-status');
+    el.disabled = true;
+    downloadVoicePack((done, total, failed) => {
+      if (status) status.textContent = `下載中 ${done} / ${total}` + (failed ? `（${failed} 則失敗）` : '');
+    }).then(r => {
+      if (status) status.textContent = r.failed
+        ? `已下載 ${r.total - r.failed} / ${r.total}（${r.failed} 則失敗）`
+        : `✅ 已完整下載 ${r.total} 則`;
+      S.settings.voicePackAt = Date.now(); save();
+      toast(r.failed ? '部分音檔下載失敗，可以再按一次' : '語音包下載完成，離線也聽得到 🎧');
+      el.disabled = false;
+    }).catch(e => {
+      if (status) status.textContent = '下載失敗';
+      toast('⚠️ ' + e.message);
+      el.disabled = false;
+    });
+  },
+
   'syncEnable': () => {
     S.sync = { code: newSyncCode(), lastPush: 0, lastPull: 0 };
     save(); render();
@@ -2195,6 +2529,14 @@ function afterRender() {
   if (np) np.onchange = () => { S.settings.newPerDay = +np.value; save(); toast('每日新卡：' + np.value + ' 張'); };
   const tp = $('#triageperday');
   if (tp) tp.onchange = () => { S.settings.triagePerDay = +tp.value; save(); toast('每日盤點：' + tp.value + ' 張'); };
+  const sr = $('#slowrate');
+  if (sr) sr.onchange = () => { S.settings.slowRate = +sr.value; save(); playAudio('すみません', 'main', true); };
+  const vs = $('#voice-status');
+  if (vs) voicePackCached().then(n => {
+    const total = audioFileList().length;
+    if (n >= total && total) vs.textContent = `✅ 已完整下載 ${total} 則`;
+    else if (n) vs.textContent = `已快取 ${n} / ${total} 則`;
+  });
   const ri = $('#reflect-input');
   if (ri) ri.addEventListener('keydown', e => { if (e.key === 'Enter') ACTIONS.saveReflect($('[data-act="saveReflect"]')); });
 }
