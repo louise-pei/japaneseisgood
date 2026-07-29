@@ -3,12 +3,24 @@
 --
 -- 在 Supabase 專案的 SQL Editor 貼上整段執行一次即可。
 --
+-- 遇到「cannot execute CREATE TABLE in a read-only transaction」的話，
+-- 資料庫或這條連線正處在唯讀模式。下面兩行會解除 session 層級的唯讀，
+-- 在同一個查詢視窗先跑它們，再跑後面的建表語句。
+--
+-- 如果仍然失敗，去 dashboard 確認：專案上方有沒有唯讀橫幅、
+-- Settings → Database 的資料庫大小（免費方案超過 500 MB 會強制唯讀）、
+-- 以及專案是不是還在 Setting up / Paused。
+--
 -- 安全性設計：
 --   資料表開了 RLS 但「刻意不建立任何 policy」，所以拿 anon key 的人
 --   無法直接 select / insert 這張表。對外只暴露 pull / push 兩支
 --   security definer 函式，兩支都必須帶對同步碼才拿得到東西。
 --   同步碼是 12 碼、去掉易混淆字元的隨機字串（約 10^18 種組合）。
 -- ===========================================================================
+
+-- 只有在遇到唯讀錯誤時才需要這兩行，平常跑了也無害
+set session characteristics as transaction read write;
+set default_transaction_read_only = 'off';
 
 create table if not exists public.progress (
   code       text primary key,
