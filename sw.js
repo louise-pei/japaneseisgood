@@ -1,7 +1,7 @@
 /* Service worker：讓「加到主畫面」的版本在沒有網路時也能開。
    人在東京、地下街沒訊號的時候，這支檔案就是 App 還能不能用的差別。 */
 
-const CACHE = 'jp-sprint-v2';
+const CACHE = 'jp-sprint-v3';
 const ASSETS = [
   './',
   './index.html',
